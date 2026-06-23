@@ -239,7 +239,7 @@ export default function Admin({ isAdmin, onLoginAdmin, onLogoutAdmin }: AdminPro
   // Admin login screen component
   if (!isAdmin) {
     return (
-      <div className="mx-auto max-w-md px-4 py-20">
+      <div className="min-h-[70vh] flex items-center justify-center px-4 py-12">
         <motion.div
           initial={{ opacity: 0, y: 15 }}
           animate={{ opacity: 1, y: 0 }}
