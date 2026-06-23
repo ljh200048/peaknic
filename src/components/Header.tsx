@@ -1,15 +1,14 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { Menu, X, Shield, Sparkles, ShoppingBag } from "lucide-react";
+import { Menu, X, Shield, User, LogOut, ShoppingBag } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
+import { useAuth } from "../context/AuthContext";
+import LoginModal from "./LoginModal";
 
-interface HeaderProps {
-  isAdmin: boolean;
-  onLogoutAdmin: () => void;
-}
-
-export default function Header({ isAdmin, onLogoutAdmin }: HeaderProps) {
+export default function Header() {
+  const { isAdmin, currentUser, logout } = useAuth();
   const [isOpen, setIsOpen] = useState(false);
+  const [isLoginOpen, setIsLoginOpen] = useState(false);
   const location = useLocation();
 
   const navItems = [
@@ -65,33 +64,48 @@ export default function Header({ isAdmin, onLogoutAdmin }: HeaderProps) {
         </div>
 
         {/* Right Side: Admin Indicator + Actions */}
-        <div className="flex items-center space-x-4">
-          {isAdmin ? (
-            <div className="hidden sm:flex items-center bg-stone-100/80 border border-stone-200 rounded-full px-3 py-1 text-xs text-stone-700">
-              <Shield className="h-3 w-3 mr-1 text-amber-600" />
-              <span className="font-medium mr-2">Admin Mode</span>
+        <div className="flex items-center space-x-3">
+          {/* User Sign status or Login trigger */}
+          {currentUser ? (
+            <div className="hidden sm:flex items-center space-x-2 text-stone-700 bg-stone-100/70 border border-stone-200/60 rounded-full px-3 py-1 text-xs">
+              {currentUser.role === "admin" ? (
+                <Shield className="h-3 w-3 text-amber-600" />
+              ) : (
+                <User className="h-3 w-3 text-stone-500" />
+              )}
+              <span className="font-medium">{currentUser.name}님</span>
               <button
-                onClick={onLogoutAdmin}
-                className="hover:text-red-600 transition-colors duration-150 text-[10px] uppercase font-bold"
+                onClick={logout}
+                className="text-stone-400 hover:text-red-500 transition-colors pl-1"
+                title="로그아웃"
               >
-                Logout
+                <LogOut className="h-3 w-3" />
               </button>
             </div>
-          ) : null}
+          ) : (
+            <button
+              onClick={() => setIsLoginOpen(true)}
+              className="text-xs text-stone-600 hover:text-stone-900 font-medium px-2.5 py-1 transition-all"
+            >
+              로그인
+            </button>
+          )}
 
-          <Link
-            to="/admin"
-            className={`flex items-center space-x-1 border rounded-full px-3.5 py-1.5 text-xs transition-all duration-200 ${
-              isActive("/admin")
-                ? "bg-stone-900 border-stone-900 text-white"
-                : "border-stone-300 text-stone-600 hover:border-stone-900 hover:text-stone-900"
-            }`}
-          >
-            <Shield className="h-3.5 w-3.5" />
-            <span className="hidden sm:inline">Admin</span>
-          </Link>
+          {isAdmin && (
+            <Link
+              to="/admin"
+              className={`flex items-center space-x-1 border rounded-full px-3.5 py-1.5 text-xs transition-all duration-200 ${
+                isActive("/admin")
+                  ? "bg-stone-900 border-stone-900 text-white"
+                  : "border-stone-300 text-stone-600 hover:border-stone-900 hover:text-stone-900"
+              }`}
+            >
+              <Shield className="h-3.5 w-3.5 text-amber-500" />
+              <span className="hidden sm:inline">Admin Panel</span>
+            </Link>
+          )}
 
-          {/* Mobile Hamburguer Toggle */}
+          {/* Mobile Menu Hamburguer Toggle */}
           <button
             onClick={() => setIsOpen(!isOpen)}
             className="md:hidden rounded-lg p-2 text-stone-500 hover:text-stone-900 focus:outline-none"
@@ -127,27 +141,54 @@ export default function Header({ isAdmin, onLogoutAdmin }: HeaderProps) {
                 </Link>
               ))}
 
-              {isAdmin && (
-                <div className="border-t border-stone-200 pt-3 mt-3 flex items-center justify-between px-4">
-                  <span className="text-xs text-stone-500 flex items-center font-medium">
-                    <Shield className="h-3 w-3 mr-1 text-amber-600" />
-                    Admin Mode Active
-                  </span>
+              {/* Login option on Mobile Drawer */}
+              <div className="border-t border-stone-200 pt-4 mt-4 px-4 flex flex-col space-y-3">
+                {currentUser ? (
+                  <div className="flex items-center justify-between">
+                    <span className="text-xs font-medium text-stone-700 flex items-center">
+                      <User className="h-3.5 w-3.5 mr-1 text-stone-500" />
+                      {currentUser.name} 님 로그인 중
+                    </span>
+                    <button
+                      onClick={() => {
+                        logout();
+                        setIsOpen(false);
+                      }}
+                      className="text-xs text-red-500 underline flex items-center"
+                    >
+                      <span>로그아웃</span>
+                    </button>
+                  </div>
+                ) : (
                   <button
                     onClick={() => {
-                      onLogoutAdmin();
                       setIsOpen(false);
+                      setIsLoginOpen(true);
                     }}
-                    className="text-xs text-red-500 underline"
+                    className="w-full text-center rounded-lg border border-stone-300 py-2.5 text-xs font-semibold text-stone-700 bg-white"
                   >
-                    Logout Admin
+                    로그인 및 회원가입
                   </button>
-                </div>
-              )}
+                )}
+
+                {isAdmin && (
+                  <Link
+                    to="/admin"
+                    onClick={() => setIsOpen(false)}
+                    className="w-full text-center rounded-lg bg-stone-900 text-white py-2.5 text-xs font-semibold flex items-center justify-center space-x-1"
+                  >
+                    <Shield className="h-3.5 w-3.5 text-amber-500" />
+                    <span>관리자 대시보드</span>
+                  </Link>
+                )}
+              </div>
             </div>
           </motion.div>
         )}
       </AnimatePresence>
+
+      {/* Global Login Modal Frame */}
+      <LoginModal isOpen={isLoginOpen} onClose={() => setIsLoginOpen(false)} />
     </header>
   );
 }

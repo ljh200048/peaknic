@@ -1,8 +1,10 @@
-import React from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { Product } from "../types";
 import { Sparkles, Eye, AlertCircle } from "lucide-react";
 import { motion } from "motion/react";
+import { useAuth } from "../context/AuthContext";
+import ImageEditOverlay from "./ImageEditOverlay";
 
 interface ProductCardProps {
   product: Product;
@@ -10,8 +12,11 @@ interface ProductCardProps {
 }
 
 export default function ProductCard({ product }: ProductCardProps): React.JSX.Element {
+  const { isAdmin } = useAuth();
+  const [currentImg, setCurrentImg] = useState(product.imageUrl);
+  
   // Empty image placeholder logic as requested
-  const displayImage = product.imageUrl || "https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?q=80&w=600&auto=format&fit=crop";
+  const displayImage = currentImg || "https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?q=80&w=600&auto=format&fit=crop";
 
   return (
     <motion.div
@@ -39,31 +44,46 @@ export default function ProductCard({ product }: ProductCardProps): React.JSX.El
       </div>
 
       {/* Main Square Image Slot */}
-      <Link to={`/product/${product.id}`} className="relative block overflow-hidden rounded-lg bg-stone-100 aspect-square">
-        <img
-          src={displayImage}
-          alt={product.name}
-          referrerPolicy="no-referrer"
-          className="h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
-        />
+      <div className="relative overflow-hidden rounded-lg bg-stone-100 aspect-square">
+        <Link to={`/product/${product.id}`} className="relative block h-full w-full">
+          <img
+            src={displayImage}
+            alt={product.name}
+            referrerPolicy="no-referrer"
+            className="h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
+          />
 
-        {/* Hover Action Overlay */}
-        <div className="absolute inset-0 flex items-center justify-center bg-stone-900/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-          <span className="flex items-center space-x-1 bg-[#FAF9F6]/90 shadow-md backdrop-blur-xs px-3.5 py-2 rounded-full text-xs text-stone-800 font-medium">
-            <Eye className="h-3.5 w-3.5 mr-1" />
-            <span>상세 보기</span>
-          </span>
-        </div>
-
-        {/* Sold Out Stamp Overlay */}
-        {product.isSoldOut && (
-          <div className="absolute inset-0 flex flex-col items-center justify-center bg-[#FAF9F6]/80 backdrop-blur-[1px]">
-            <div className="rounded-full bg-stone-900/90 text-[10px] text-white px-3.5 py-1.5 font-bold tracking-widest uppercase">
-              SOLD OUT
-            </div>
+          {/* Hover Action Overlay */}
+          <div className="absolute inset-0 flex items-center justify-center bg-stone-900/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+            <span className="flex items-center space-x-1 bg-[#FAF9F6]/90 shadow-md backdrop-blur-xs px-3.5 py-2 rounded-full text-xs text-stone-800 font-medium">
+              <Eye className="h-3.5 w-3.5 mr-1" />
+              <span>상세 보기</span>
+            </span>
           </div>
+
+          {/* Sold Out Stamp Overlay */}
+          {product.isSoldOut && (
+            <div className="absolute inset-0 flex flex-col items-center justify-center bg-[#FAF9F6]/80 backdrop-blur-[1px]">
+              <div className="rounded-full bg-stone-900/90 text-[10px] text-white px-3.5 py-1.5 font-bold tracking-widest uppercase">
+                SOLD OUT
+              </div>
+            </div>
+          )}
+        </Link>
+
+        {/* Dynamic Image editor overlay for logged-in admin sessions */}
+        {isAdmin && (
+          <ImageEditOverlay
+            collectionName="products"
+            docId={product.id}
+            fieldName="imageUrl"
+            currentValue={displayImage}
+            onUpdateSuccess={(newUrl) => setCurrentImg(newUrl)}
+            label="사진 변경"
+            className="absolute top-2 right-2 scale-90"
+          />
         )}
-      </Link>
+      </div>
 
       {/* Accessory Info Block */}
       <div className="mt-3.5 flex flex-col flex-grow">

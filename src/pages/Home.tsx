@@ -6,6 +6,8 @@ import { Product, SiteSettings } from "../types";
 import ProductCard from "../components/ProductCard";
 import { ArrowRight, Gift, Sparkles, Heart, Award, ArrowDown } from "lucide-react";
 import { motion } from "motion/react";
+import { useAuth } from "../context/AuthContext";
+import ImageEditOverlay from "../components/ImageEditOverlay";
 
 // Fallback images for category thumbnails
 const CATEGORY_THUMBS: { [key: string]: string } = {
@@ -27,6 +29,7 @@ const INSTA_POSTS = [
 ];
 
 export default function Home() {
+  const { isAdmin } = useAuth();
   const [products, setProducts] = useState<Product[]>([]);
   const [settings, setSettings] = useState<SiteSettings | null>(null);
   const [loading, setLoading] = useState(true);
@@ -91,6 +94,32 @@ export default function Home() {
           />
           <div className="absolute inset-0 bg-linear-to-t from-stone-900/60 via-stone-900/20 to-stone-900/40" />
         </div>
+
+        {/* Dynamic cover photo changer for logged-in admin mode */}
+        {isAdmin && (
+          <ImageEditOverlay
+            collectionName="siteSettings"
+            docId="main"
+            fieldName="heroImageUrl"
+            currentValue={heroImage}
+            onUpdateSuccess={(newUrl) => {
+              setSettings((prev) =>
+                prev
+                  ? { ...prev, heroImageUrl: newUrl }
+                  : {
+                      id: "main",
+                      heroTitle: "Everyday Accessories for Your Mood",
+                      heroSubtitle: "Peaknic은 심플함 속에 녹아든 따뜻한 일상의 순간들을 아름다운 감성으로 포착합니다. 고요하게 빛나는 우리들만의 장식품.",
+                      heroImageUrl: newUrl,
+                      instagramUrl: "https://instagram.com/peaknic_archive",
+                      noticeText: "• 한시적 무료 배송 프로모션 진행 중 (3만원 이상 구매 시)",
+                    }
+              );
+            }}
+            label="메인 배경 이미지 변경"
+            className="absolute top-6 right-6"
+          />
+        )}
 
         <div className="relative z-10 mx-auto max-w-4xl text-center text-white px-4 md:px-0">
           <motion.div

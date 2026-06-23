@@ -1,6 +1,7 @@
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
 import { BrowserRouter as Router, Routes, Route, useLocation } from "react-router-dom";
 import { initializeDefaultDataIfNeeded } from "./firebase";
+import { AuthProvider, useAuth } from "./context/AuthContext";
 
 // Core Components
 import Header from "./components/Header";
@@ -17,12 +18,9 @@ import Contact from "./pages/Contact";
 
 import { motion, AnimatePresence } from "motion/react";
 
-function AnimatedRoutes({ isAdmin, onLoginAdmin, onLogoutAdmin }: { 
-  isAdmin: boolean; 
-  onLoginAdmin: () => void; 
-  onLogoutAdmin: () => void; 
-}) {
+function AnimatedRoutes() {
   const location = useLocation();
+  const { isAdmin, loginAdmin, logout } = useAuth();
 
   return (
     <AnimatePresence mode="wait">
@@ -47,8 +45,8 @@ function AnimatedRoutes({ isAdmin, onLoginAdmin, onLogoutAdmin }: {
             element={
               <Admin 
                 isAdmin={isAdmin} 
-                onLoginAdmin={onLoginAdmin} 
-                onLogoutAdmin={onLogoutAdmin} 
+                onLoginAdmin={() => loginAdmin("peaknic123")} 
+                onLogoutAdmin={logout} 
               />
             } 
           />
@@ -59,21 +57,6 @@ function AnimatedRoutes({ isAdmin, onLoginAdmin, onLogoutAdmin }: {
 }
 
 export default function App() {
-  // Simple administrative authorization session persistence
-  const [isAdmin, setIsAdmin] = useState<boolean>(() => {
-    return localStorage.getItem("peaknic_admin_session") === "true";
-  });
-
-  const handleLoginAdmin = () => {
-    setIsAdmin(true);
-    localStorage.setItem("peaknic_admin_session", "true");
-  };
-
-  const handleLogoutAdmin = () => {
-    setIsAdmin(false);
-    localStorage.removeItem("peaknic_admin_session");
-  };
-
   // Run initial seed checks on start
   useEffect(() => {
     initializeDefaultDataIfNeeded();
@@ -81,20 +64,18 @@ export default function App() {
 
   return (
     <Router>
-      <div className="flex flex-col min-h-screen bg-[#FAF9F6] selection:bg-stone-200/60 selection:text-stone-900" id="peaknic-applet">
-        {/* Sticky Global Top Header */}
-        <Header isAdmin={isAdmin} onLogoutAdmin={handleLogoutAdmin} />
+      <AuthProvider>
+        <div className="flex flex-col min-h-screen bg-[#FAF9F6] selection:bg-stone-200/60 selection:text-stone-900" id="peaknic-applet">
+          {/* Sticky Global Top Header */}
+          <Header />
 
-        {/* Dynamic Route view with Motion transitions */}
-        <AnimatedRoutes 
-          isAdmin={isAdmin} 
-          onLoginAdmin={handleLoginAdmin} 
-          onLogoutAdmin={handleLogoutAdmin} 
-        />
+          {/* Dynamic Route view with Motion transitions */}
+          <AnimatedRoutes />
 
-        {/* Global Boutique Footer */}
-        <Footer />
-      </div>
+          {/* Global Boutique Footer */}
+          <Footer />
+        </div>
+      </AuthProvider>
     </Router>
   );
 }

@@ -6,10 +6,13 @@ import { Product } from "../types";
 import ProductCard from "../components/ProductCard";
 import { Truck, RotateCcw, AlertTriangle, ArrowLeft, ShoppingCart, MessageCircle, Ruler } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
+import { useAuth } from "../context/AuthContext";
+import ImageEditOverlay from "../components/ImageEditOverlay";
 
 export default function Detail() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
+  const { isAdmin } = useAuth();
   const [product, setProduct] = useState<Product | null>(null);
   const [recommendations, setRecommendations] = useState<Product[]>([]);
   const [selectedImage, setSelectedImage] = useState("");
@@ -138,6 +141,22 @@ export default function Detail() {
                   품절 (SOLD OUT)
                 </div>
               </div>
+            )}
+
+            {/* Dynamic Real-time Image Changer for Admin Mode */}
+            {isAdmin && (
+              <ImageEditOverlay
+                collectionName="products"
+                docId={product.id}
+                fieldName="imageUrl"
+                currentValue={product.imageUrl}
+                onUpdateSuccess={(newUrl) => {
+                  setProduct(prev => prev ? { ...prev, imageUrl: newUrl } : null);
+                  setSelectedImage(newUrl);
+                }}
+                label="대표 사진 변경"
+                className="absolute top-4 right-4"
+              />
             )}
           </div>
 
