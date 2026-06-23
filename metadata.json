@@ -1,0 +1,6 @@
+{
+  "name": "Peaknic",
+  "description": "Everyday Accessories for Your Mood - 감성 악세사리 쇼핑몰 Peaknic. 미니멀, 데일리, 선물 같은 감성 악세사리를 반지, 목걸이, 팔찌, 귀걸이, 키링 카테고리로 판매하고 주문할 수 있는 서비스입니다.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

@@ -1,0 +1,73 @@
+{
+  "entities": {
+    "Product": {
+      "title": "Product",
+      "description": "An accessory item for sale in the Peaknic store",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "name": { "type": "string" },
+        "price": { "type": "number" },
+        "category": { "type": "string" },
+        "material": { "type": "string" },
+        "size": { "type": "string" },
+        "color": { "type": "string" },
+        "description": { "type": "string" },
+        "imageUrl": { "type": "string" },
+        "images": { "type": "array" },
+        "isNew": { "type": "boolean" },
+        "isBest": { "type": "boolean" },
+        "isSoldOut": { "type": "boolean" },
+        "createdAt": { "type": "string" },
+        "updatedAt": { "type": "string" }
+      },
+      "required": ["id", "name", "price", "category", "material", "isSoldOut"]
+    },
+    "Order": {
+      "title": "Order",
+      "description": "An order submitted by a customer for purchase",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "productId": { "type": "string" },
+        "productName": { "type": "string" },
+        "price": { "type": "number" },
+        "customerName": { "type": "string" },
+        "phone": { "type": "string" },
+        "address": { "type": "string" },
+        "depositorName": { "type": "string" },
+        "memo": { "type": "string" },
+        "status": { "type": "string" },
+        "createdAt": { "type": "string" }
+      },
+      "required": ["id", "productId", "productName", "price", "customerName", "phone", "address", "depositorName", "status", "createdAt"]
+    },
+    "SiteSettings": {
+      "title": "SiteSettings",
+      "description": "The configuration settings for the Peaknic store front page banner and details",
+      "type": "object",
+      "properties": {
+        "heroTitle": { "type": "string" },
+        "heroSubtitle": { "type": "string" },
+        "heroImageUrl": { "type": "string" },
+        "instagramUrl": { "type": "string" },
+        "noticeText": { "type": "string" }
+      },
+      "required": ["heroTitle", "heroSubtitle", "heroImageUrl"]
+    }
+  },
+  "firestore": {
+    "/products/{productId}": {
+      "schema": "Product",
+      "description": "Products list collection"
+    },
+    "/orders/{orderId}": {
+      "schema": "Order",
+      "description": "Orders received by the shop"
+    },
+    "/siteSettings/{settingId}": {
+      "schema": "SiteSettings",
+      "description": "Store configuration block"
+    }
+  }
+}
