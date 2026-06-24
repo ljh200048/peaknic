@@ -1,22 +1,9 @@
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
-    // Products: anyone can read, authenticated users can write
-    match /products/{productId} {
-      allow read: if true;
-      allow write: if request.auth != null;
-    }
-    
-    // Orders: anyone can submit (create), authenticated users can read/write
-    match /orders/{orderId} {
-      allow create: if true;
-      allow read, update, delete: if request.auth != null;
-    }
-    
-    // SiteSettings: anyone can read, authenticated users can write
-    match /siteSettings/{settingId} {
-      allow read: if true;
-      allow write: if request.auth != null;
+    // Public read & write access for a seamless prototype/preview experience
+    match /{document=**} {
+      allow read, write: if true;
     }
   }
 }

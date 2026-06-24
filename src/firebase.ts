@@ -20,17 +20,16 @@ export const auth = getAuth(app);
 const SAMPLE_PRODUCTS: Product[] = [
   {
     id: "prod-1",
-    name: "Daily Silver Ring",
-    price: 18000,
-    category: "Ring",
-    material: "925 Sterling Silver",
-    size: "9호, 11호, 13호, 15호",
-    color: "Silver",
-    description: "매일매일 일상 속에서 자연스럽게 레이어링하기 좋은 심플하고 슬림한 느낌의 925 실버 링입니다. 미니멀한 두께감으로 편안한 착용감을 선사합니다.",
-    imageUrl: "https://images.unsplash.com/photo-1605100804763-247f67b3557e?q=80&w=600&auto=format&fit=crop",
+    name: "데이지 가든 비즈 팔찌 (Daisy Garden)",
+    price: 11000,
+    category: "Bracelet",
+    material: "Premium TOHO Glass Seed Beads, Polyurethane Thread",
+    size: "기본 둘레 약 15.5cm (신축성 우수)",
+    color: "Daisy Yellow & Peach Multi",
+    description: "자연스러운 무드의 데이지 꽃 패턴을 한 땀 한 땀 영롱하게 엮어낸 수공예 비즈 팔찌입니다. 잔잔한 파스텔 피치 톤과 데이지 옐로우의 조화가 매력적입니다.",
+    imageUrl: "https://images.unsplash.com/photo-1618403088890-3d9ff6f4c8da?q=80&w=600&auto=format&fit=crop",
     images: [
-      "https://images.unsplash.com/photo-1605100804763-247f67b3557e?q=80&w=600&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?q=80&w=600&auto=format&fit=crop"
+      "https://images.unsplash.com/photo-1618403088890-3d9ff6f4c8da?q=80&w=600&auto=format&fit=crop"
     ],
     isNew: true,
     isBest: false,
@@ -40,16 +39,16 @@ const SAMPLE_PRODUCTS: Product[] = [
   },
   {
     id: "prod-2",
-    name: "Pearl Mood Necklace",
-    price: 24000,
-    category: "Necklace",
-    material: "淡水 Pearl (담수진주), Brass (Gold Plated)",
-    size: "42cm (+ 여유체인 5cm)",
-    color: "Pearl White",
-    description: "자연스러운 은은한 광택감이 돋보이는 고품질 담수진주 목걸이입니다. 캐주얼한 티셔츠부터 드레시한 블라우스까지 은은하게 매치하여 감성 가득한 무드를 더해줍니다.",
-    imageUrl: "https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?q=80&w=600&auto=format&fit=crop",
+    name: "오라 쿼츠 원석 비즈 팔찌 (Aura Quartz)",
+    price: 19800,
+    category: "Bracelet",
+    material: "Natural Madagascan Rose Quartz, Aura Crystal, 925 Silver Accent",
+    size: "기본 둘레 약 16cm (우레탄 줄)",
+    color: "Milky Pink & Aurora-translucent",
+    description: "은은한 복숭아 빛 천연 피치 원석과 빛 반사에 따라 홀로그램을 자아내는 아우라 쿼츠 비즈를 배합한 로맨틱 꿀조합입니다. 햇살 아래에서 볼 때 더욱 눈부십니다.",
+    imageUrl: "https://images.unsplash.com/photo-1602751584552-8ba73aad10e1?q=80&w=600&auto=format&fit=crop",
     images: [
-      "https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?q=80&w=600&auto=format&fit=crop"
+      "https://images.unsplash.com/photo-1602751584552-8ba73aad10e1?q=80&w=600&auto=format&fit=crop"
     ],
     isNew: true,
     isBest: true,
@@ -59,16 +58,16 @@ const SAMPLE_PRODUCTS: Product[] = [
   },
   {
     id: "prod-3",
-    name: "Soft Chain Bracelet",
-    price: 19500,
+    name: "프렌치 쁘띠 담수진주 비즈 팔찌",
+    price: 18500,
     category: "Bracelet",
-    material: "Surgical Steel 316L",
-    size: "16cm (+ 3cm 여유 줄)",
-    color: "Silver, Warm Gold",
-    description: "써지컬 스틸 소재로 알러지 걱정 없이 오랫동안 매끄러운 텍스처를 선사하는 체인 팔찌입니다. 빛의 각도에 따라 잔잔하게 반짝이는 유려한 링크 디자인입니다.",
-    imageUrl: "https://images.unsplash.com/photo-1611591437281-460bfbe1220a?q=80&w=600&auto=format&fit=crop",
+    material: "Natural Freshwater Pearl (담수진주 3mm), 14K Gold Filled Beads",
+    size: "총 길이 15.5cm (+ 여유체인 3cm)",
+    color: "Natural Creamy White & Gold",
+    description: "정형화되지 않은 우아한 미가 돋보이는 천연 초소형 담수진주와 영롱한 14K 골드필드 볼을 레이어링한 작품입니다. 레이스 블라우스나 니트에 탁월한 매칭.",
+    imageUrl: "https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?q=80&w=600&auto=format&fit=crop",
     images: [
-      "https://images.unsplash.com/photo-1611591437281-460bfbe1220a?q=80&w=600&auto=format&fit=crop"
+      "https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?q=80&w=600&auto=format&fit=crop"
     ],
     isNew: false,
     isBest: true,
@@ -78,16 +77,16 @@ const SAMPLE_PRODUCTS: Product[] = [
   },
   {
     id: "prod-4",
-    name: "Mini Heart Earrings",
-    price: 15000,
-    category: "Earrings",
-    material: "925 Sterling Silver, White Gold Plating",
-    size: "가로 6mm * 세로 5mm",
-    color: "Silver, Rose Gold",
-    description: "한 듯 안 한 듯 작고 귀여운 미니멀한 입체 하트 귀걸이입니다. 매일 착용해도 부담 없는 초소형 크기감과 사랑스러운 쉐입으로 데일리 소장 가치가 높습니다.",
-    imageUrl: "https://images.unsplash.com/photo-1635767798638-3e25273a8236?q=80&w=600&auto=format&fit=crop",
+    name: "소다 캔디 글라스 비즈 팔찌 (Soda Candy)",
+    price: 12000,
+    category: "Bracelet",
+    material: "Italian Murano Glass Beads, Matte Frost Seed Beads",
+    size: "기본 둘레 약 16cm (고탄성 실리콘사)",
+    color: "Soda Ocean Blue & Lime Green",
+    description: "맑고 투명한 무라노 글라스 데코 비즈와 포슬포슬한 질감의 매트 무광 씨드 비즈를 센스 있게 교차한 여름 청량 에디션입니다. 데일리 포인트에 이상적입니다.",
+    imageUrl: "https://images.unsplash.com/photo-1603561591411-07134e71a2a9?q=80&w=600&auto=format&fit=crop",
     images: [
-      "https://images.unsplash.com/photo-1635767798638-3e25273a8236?q=80&w=600&auto=format&fit=crop"
+      "https://images.unsplash.com/photo-1603561591411-07134e71a2a9?q=80&w=600&auto=format&fit=crop"
     ],
     isNew: false,
     isBest: false,
@@ -97,13 +96,13 @@ const SAMPLE_PRODUCTS: Product[] = [
   },
   {
     id: "prod-5",
-    name: "Vintage Keyring",
-    price: 12000,
+    name: "어텀 바이브 비즈 팔찌 키링 Set",
+    price: 14000,
     category: "Keyring",
-    material: "Brass / Acrylic / Leather",
-    size: "총 길이 약 8.5cm",
-    color: "Antique Gold, Dark Forest",
-    description: "시간의 흔적과 고풍스러운 무드를 고스란히 담아낸 빈티지 참 황동 키링입니다. 에어팟, 백팩, 차 키 등에 걸었을 때 따뜻하고 유니크한 가을의 풍경을 연출할 수 있습니다.",
+    material: "Vintage Wood Beads, Acrylic Resin Beads, Brass Charm",
+    size: "비즈 밴드 약 14cm (링포함 총 18cm)",
+    color: "Warm Amber & Vintage Khaki",
+    description: "고풍스럽고 앤티크한 무드를 연출하는 빈티지 우드 비즈와 영롱한 앰버 글라스 비즈를 레토르 매칭한 가을 햇살 머금은 키링 겸 팔찌 시리즈입니다.",
     imageUrl: "https://images.unsplash.com/photo-1582139329536-e7284fece509?q=80&w=600&auto=format&fit=crop",
     images: [
       "https://images.unsplash.com/photo-1582139329536-e7284fece509?q=80&w=600&auto=format&fit=crop"
@@ -116,16 +115,16 @@ const SAMPLE_PRODUCTS: Product[] = [
   },
   {
     id: "prod-6",
-    name: "Couple Ring Set",
-    price: 38000,
-    category: "Ring",
-    material: "925 Sterling Silver (두께 조절 무광 피니시)",
-    size: "Free (조절 가능한 오픈링 타입, 남녀 공용)",
-    color: "Matt Silver",
-    description: "무광 실버 특유의 은은하고 포근한 감성으로 제작된 투 톤 오픈링 커플 반지 세트입니다. 뒷면이 트여있는 조절식 오픈형 쉐입으로 누구나 정교한 피팅감을 가집니다.",
-    imageUrl: "https://images.unsplash.com/photo-1543294001-f7cbfe92237e?q=80&w=600&auto=format&fit=crop",
+    name: "라벤더 자수정 레이어드 2줄 세트",
+    price: 22000,
+    category: "Bracelet",
+    material: "Amethyst (천연 자수정), Milky Chalcedony Gemstone, Cord",
+    size: "자유 매듭 조절식 (Free)",
+    color: "Soft Lavender & Milky Mist",
+    description: "천연 자수정의 포근한 라벤더 보라색과 은은한 우윳빛 칼세도니 원석을 감성 매듭으로 배합한 2개 세트 구성 상품입니다. 레이어링 및 단독 착용에 최적화.",
+    imageUrl: "https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?q=80&w=600&auto=format&fit=crop",
     images: [
-      "https://images.unsplash.com/photo-1543294001-f7cbfe92237e?q=80&w=600&auto=format&fit=crop"
+      "https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?q=80&w=600&auto=format&fit=crop"
     ],
     isNew: false,
     isBest: true,
@@ -137,35 +136,59 @@ const SAMPLE_PRODUCTS: Product[] = [
 
 const DEFAULT_SETTINGS: SiteSettings = {
   id: "main",
-  heroTitle: "Everyday Accessories for Your Mood",
-  heroSubtitle: "Peaknic은 심플함 속에 녹아든 따뜻한 일상의 순간들을 아름다운 감성으로 포착합니다. 고요하게 빛나는 우리들만의 장식품.",
-  heroImageUrl: "https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?q=80&w=1600&auto=format&fit=crop",
+  heroTitle: "Elegant Handcrafted Beaded Bracelets",
+  heroSubtitle: "Peaknic(피크닉)은 천연석 비즈, 맑은 무라노 글라스, 담수진주를 오가닉하게 엮어내어 일상 한구석에 편안하게 녹아드는 수제 비즈 팔찌를 직접 디자인합니다.",
+  heroImageUrl: "https://images.unsplash.com/photo-1618403088890-3d9ff6f4c8da?q=80&w=1600&auto=format&fit=crop",
   instagramUrl: "https://instagram.com/peaknic_archive",
-  noticeText: "• 한시적 무료 배송 프로모션 진행 중 (3만원 이상 구매 시)\n• 전 제품 환경 호르몬 및 알러지 방지 처리\n• 주문 제작 상품은 영업일 기준 평균 3~5일 소요됩니다."
+  noticeText: "• 한시적 무료 배송 프로모션 진행 중 (3만원 이상 구매 시)\n• 최고급 신축성 우레탄사 사용으로 알러지 걱정 없는 편안함\n• 100% 핸드메이드 방식으로 주문 제작 시 평균 2~4 영업일이 소요됩니다."
 };
 
 export async function initializeDefaultDataIfNeeded() {
   try {
     const productsSnapshot = await getDocs(collection(db, "products"));
-    if (productsSnapshot.empty) {
-      console.log("No products found in Firestore. Seeding default accessory catalog...");
+    // Detect old accessory theme to perform instant overhaul wipe
+    let isOldTheme = false;
+    productsSnapshot.docs.forEach((doc) => {
+      const data = doc.data();
+      if (data.category === "Ring" || data.category === "Necklace" || data.category === "Earrings") {
+        isOldTheme = true;
+      }
+    });
+
+    if (productsSnapshot.empty || isOldTheme) {
+      console.log("Empty or old jewelry database detected. Re-seeding Beaded Bracelet collection...");
       const batch = writeBatch(db);
+      
+      // Delete old products if any
+      productsSnapshot.docs.forEach((d) => {
+        batch.delete(d.ref);
+      });
+
       SAMPLE_PRODUCTS.forEach((prod) => {
         const docRef = doc(collection(db, "products"), prod.id);
         batch.set(docRef, prod);
       });
       await batch.commit();
-      console.log("Default catalog seeded successfully.");
+      console.log("Beads bracelet catalog seeded.");
     }
 
     const settingsDoc = doc(db, "siteSettings", "main");
     const settingsSnapshot = await getDocs(collection(db, "siteSettings"));
-    if (settingsSnapshot.empty) {
-      console.log("No siteSettings found. Seeding default typography layout...");
+    
+    let isOldSettings = false;
+    settingsSnapshot.docs.forEach((doc) => {
+      const data = doc.data();
+      if (data.heroTitle === "Everyday Accessories for Your Mood" || !data.heroTitle?.toLowerCase().includes("bead")) {
+        isOldSettings = true;
+      }
+    });
+
+    if (settingsSnapshot.empty || isOldSettings) {
+      console.log("Re-seeding brand identity to Beads Bracelet studio...");
       await setDoc(settingsDoc, DEFAULT_SETTINGS);
-      console.log("Default site settings seeded successfully.");
+      console.log("Default settings initialized.");
     }
   } catch (error) {
-    console.warn("Could not seed initial data. It could be due to permission settings or cold startup:", error);
+    console.warn("Could not seed initial data:", error);
   }
 }
