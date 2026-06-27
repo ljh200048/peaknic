@@ -22,11 +22,8 @@ export default function Footer() {
           <div>
             <h4 className="font-serif text-sm tracking-widest text-stone-900 uppercase mb-4">Categories</h4>
             <ul className="space-y-2.5 text-xs text-stone-500 font-medium">
-              <li><Link to="/shop?category=Seed Beads" className="hover:text-stone-900 transition-colors">Seed Beads (씨드 비즈)</Link></li>
-              <li><Link to="/shop?category=Gemstone Beads" className="hover:text-stone-900 transition-colors">Gemstone Beads (천연석 비즈)</Link></li>
-              <li><Link to="/shop?category=Pearl Beads" className="hover:text-stone-900 transition-colors">Pearl Beads (담수진주 비즈)</Link></li>
-              <li><Link to="/shop?category=Couples/Friends" className="hover:text-stone-900 transition-colors">Couples/Friends (커플/우정 비즈)</Link></li>
-              <li><Link to="/shop?category=Bead Keyrings" className="hover:text-stone-900 transition-colors">Bead Keyrings (비즈 키링)</Link></li>
+              <li><Link to="/shop?category=Beaded Bracelets" className="hover:text-stone-900 transition-colors">Beaded Bracelets (비즈 팔찌)</Link></li>
+              <li><Link to="/shop?category=Couples/Friends" className="hover:text-stone-900 transition-colors">Couples/Friends (커플/우정 팔찌)</Link></li>
             </ul>
           </div>
 

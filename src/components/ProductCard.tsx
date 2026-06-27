@@ -28,7 +28,9 @@ export default function ProductCard({ product }: ProductCardProps): React.JSX.El
     >
       {/* Category header small and mini tags */}
       <div className="mb-2 flex items-center justify-between text-[11px] font-mono tracking-wider text-stone-400">
-        <span>{product.category.toUpperCase()}</span>
+        <span className="font-sans font-semibold">
+          {product.category === "Beaded Bracelets" ? "비즈 팔찌" : "커플/우정 팔찌"}
+        </span>
         <div className="flex space-x-1.5">
           {product.isNew && (
             <span className="rounded-full bg-emerald-50 px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-tight text-emerald-700 font-sans border border-emerald-100">

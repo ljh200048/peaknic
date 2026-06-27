@@ -20,7 +20,7 @@ export default function Shop() {
   const onlyBest = searchParams.get("filter") === "best";
   const [searchQuery, setSearchQuery] = useState("");
 
-  const categories = ["All", "Seed Beads", "Gemstone Beads", "Pearl Beads", "Couples/Friends", "Bead Keyrings"];
+  const categories = ["All", "Beaded Bracelets", "Couples/Friends"];
 
   useEffect(() => {
     async function fetchProducts() {
@@ -136,11 +136,8 @@ export default function Shop() {
               }`}
             >
               {cat === "All" ? "전체 상품" : 
-               cat === "Seed Beads" ? "씨드 비즈" : 
-               cat === "Gemstone Beads" ? "천연석 비즈" : 
-               cat === "Pearl Beads" ? "담수진주 비즈" : 
-               cat === "Couples/Friends" ? "커플/우정 비즈" : 
-               cat === "Bead Keyrings" ? "비즈 키링" : cat}
+               cat === "Beaded Bracelets" ? "비즈 팔찌" : 
+               cat === "Couples/Friends" ? "커플/우정 팔찌" : cat}
             </button>
           ))}
         </div>

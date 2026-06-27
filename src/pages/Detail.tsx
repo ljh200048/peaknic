@@ -221,8 +221,9 @@ export default function Detail() {
           {/* Header Title block */}
           <div>
             <div className="flex items-center justify-between mb-2">
-              <span className="text-xs font-mono font-semibold tracking-widest text-stone-400 uppercase">
-                {product.category} Collection
+              <span className="text-xs font-semibold tracking-wider text-stone-400">
+                {product.category === "Beaded Bracelets" ? "비즈 팔찌" :
+                 product.category === "Couples/Friends" ? "커플/우정 팔찌" : product.category} Collection
               </span>
               <div className="flex space-x-1.5">
                 {product.isNew && (

@@ -11,11 +11,8 @@ import ImageEditOverlay from "../components/ImageEditOverlay";
 
 // Fallback images for category thumbnails
 const CATEGORY_THUMBS: { [key: string]: string } = {
-  "Seed Beads": "https://images.unsplash.com/photo-1611085583191-a3b1a3029a2a?q=80&w=600&auto=format&fit=crop",
-  "Gemstone Beads": "https://images.unsplash.com/photo-1602751584552-8ba73aad10e1?q=80&w=600&auto=format&fit=crop",
-  "Pearl Beads": "https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?q=80&w=600&auto=format&fit=crop",
+  "Beaded Bracelets": "https://images.unsplash.com/photo-1611085583191-a3b1a3029a2a?q=80&w=600&auto=format&fit=crop",
   "Couples/Friends": "https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?q=80&w=600&auto=format&fit=crop",
-  "Bead Keyrings": "https://images.unsplash.com/photo-1582139329536-e7284fece509?q=80&w=600&auto=format&fit=crop",
 };
 
 export default function Home() {
@@ -65,9 +62,9 @@ export default function Home() {
   const newProducts = products.filter((p) => p.isNew && !p.isSoldOut).slice(0, 4);
   const bestProducts = products.filter((p) => p.isBest).slice(0, 4);
   
-  // Custom filter for gifts: Pearl Beads, Couples/Friends or products matching typical gifting premium items
+  // Custom filter for gifts: Couples/Friends or products matching typical gifting premium items
   const giftProducts = products
-    .filter((p) => p.category === "Pearl Beads" || p.category === "Couples/Friends" || p.name.includes("Heart") || p.name.includes("Couple"))
+    .filter((p) => p.category === "Couples/Friends" || p.name.includes("Heart") || p.name.includes("Couple"))
     .slice(0, 4);
 
   const heroImage = settings?.heroImageUrl || "https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?q=80&w=1600&auto=format&fit=crop";
@@ -198,18 +195,12 @@ export default function Home() {
                   className="absolute inset-0 flex flex-col items-center justify-center text-white"
                 >
                   <span className="font-serif text-lg sm:text-xl font-medium tracking-widest mb-1 shadow-xs">
-                    {cat === "Seed Beads" ? "Seed Beads" :
-                     cat === "Gemstone Beads" ? "Gemstone" :
-                     cat === "Pearl Beads" ? "Pearl Beads" :
-                     cat === "Couples/Friends" ? "Couples" :
-                     cat === "Bead Keyrings" ? "Keyrings" : cat}
+                    {cat === "Beaded Bracelets" ? "Beaded" :
+                     cat === "Couples/Friends" ? "Couples" : cat}
                   </span>
                   <span className="text-[10px] font-sans tracking-widest opacity-95 uppercase font-semibold mt-1 bg-[#FAF9F6] text-stone-900 rounded-full px-3 py-0.5 shadow-xs">
-                    {cat === "Seed Beads" ? "씨드 비즈" :
-                     cat === "Gemstone Beads" ? "천연석 비즈" :
-                     cat === "Pearl Beads" ? "담수진주" :
-                     cat === "Couples/Friends" ? "우정/커플" :
-                     cat === "Bead Keyrings" ? "비즈 키링" : cat}
+                    {cat === "Beaded Bracelets" ? "비즈 팔찌" :
+                     cat === "Couples/Friends" ? "커플/우정 팔찌" : cat}
                   </span>
                 </Link>
               </motion.div>
@@ -362,7 +353,7 @@ export default function Home() {
               </h2>
             </div>
             <Link
-              to="/shop?category=Necklace"
+              to="/shop?category=Couples/Friends"
               className="mt-3 sm:mt-0 text-stone-500 hover:text-stone-900 text-xs font-bold tracking-widest uppercase flex items-center space-x-1 group border-b border-stone-300 hover:border-stone-900 pb-0.5 transition-colors"
             >
               <span>See more gifts</span>

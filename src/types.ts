@@ -2,7 +2,7 @@ export interface Product {
   id: string;
   name: string;
   price: number;
-  category: 'Seed Beads' | 'Gemstone Beads' | 'Pearl Beads' | 'Couples/Friends' | 'Bead Keyrings';
+  category: 'Beaded Bracelets' | 'Couples/Friends';
   material: string;
   size: string;
   color: string;

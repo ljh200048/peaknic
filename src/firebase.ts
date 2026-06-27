@@ -22,7 +22,7 @@ const SAMPLE_PRODUCTS: Product[] = [
     id: "prod-1",
     name: "데이지 가든 비즈 팔찌 (Daisy Garden)",
     price: 11000,
-    category: "Seed Beads",
+    category: "Beaded Bracelets",
     material: "Premium TOHO Glass Seed Beads, Polyurethane Thread",
     size: "기본 둘레 약 15.5cm (신축성 우수)",
     color: "Daisy Yellow & Peach Multi",
@@ -41,7 +41,7 @@ const SAMPLE_PRODUCTS: Product[] = [
     id: "prod-2",
     name: "오라 쿼츠 천연석 비즈 팔찌 (Aura Quartz)",
     price: 19800,
-    category: "Gemstone Beads",
+    category: "Beaded Bracelets",
     material: "Natural Madagascan Rose Quartz, Aura Crystal, 925 Silver Accent",
     size: "기본 둘레 약 16cm (우레탄 줄)",
     color: "Milky Pink & Aurora-translucent",
@@ -60,7 +60,7 @@ const SAMPLE_PRODUCTS: Product[] = [
     id: "prod-3",
     name: "프렌치 쁘띠 담수진주 비즈 팔찌",
     price: 18500,
-    category: "Pearl Beads",
+    category: "Beaded Bracelets",
     material: "Natural Freshwater Pearl (담수진주 3mm), 14K Gold Filled Beads",
     size: "총 길이 15.5cm (+ 여유체인 3cm)",
     color: "Natural Creamy White & Gold",
@@ -79,7 +79,7 @@ const SAMPLE_PRODUCTS: Product[] = [
     id: "prod-4",
     name: "소다 캔디 글라스 비즈 팔찌 (Soda Candy)",
     price: 12000,
-    category: "Seed Beads",
+    category: "Beaded Bracelets",
     material: "Italian Murano Glass Beads, Matte Frost Seed Beads",
     size: "기본 둘레 약 16cm (고탄성 실리콘사)",
     color: "Soda Ocean Blue & Lime Green",
@@ -98,7 +98,7 @@ const SAMPLE_PRODUCTS: Product[] = [
     id: "prod-5",
     name: "어텀 바이브 비즈 팔찌 키링 Set",
     price: 14000,
-    category: "Bead Keyrings",
+    category: "Beaded Bracelets",
     material: "Vintage Wood Beads, Acrylic Resin Beads, Brass Charm",
     size: "비즈 밴드 약 14cm (링포함 총 18cm)",
     color: "Warm Amber & Vintage Khaki",
@@ -121,7 +121,7 @@ const SAMPLE_PRODUCTS: Product[] = [
     material: "Amethyst (천연 자수정), Milky Chalcedony Gemstone, Cord",
     size: "자유 매듭 조절식 (Free)",
     color: "Soft Lavender & Milky Mist",
-    description: "천연 자수정의 포근한 라벤더 보라색과 은은한 우윳빛 칼세도니 원석을 감성 매듭으로 배합한 2개 세트 구성 상품입니다. 레이어링 및 단독 착용에 최적화.",
+    description: "천연 자수정의 포근한 라벤더 보라색และ 은은한 우윳빛 칼세도니 원석을 감성 매듭으로 배합한 2개 세트 구성 상품입니다. 레이어링 및 단독 착용에 최적화.",
     imageUrl: "https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?q=80&w=600&auto=format&fit=crop",
     images: [
       "https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?q=80&w=600&auto=format&fit=crop"
@@ -159,11 +159,8 @@ export async function initializeDefaultDataIfNeeded() {
     productsSnapshot.docs.forEach((doc) => {
       const data = doc.data();
       if (
-        data.category === "Seed Beads" ||
-        data.category === "Gemstone Beads" ||
-        data.category === "Pearl Beads" ||
-        data.category === "Couples/Friends" ||
-        data.category === "Bead Keyrings"
+        data.category === "Beaded Bracelets" ||
+        data.category === "Couples/Friends"
       ) {
         hasNewBeadedProducts = true;
       }
@@ -215,6 +212,7 @@ export async function initializeDefaultDataIfNeeded() {
       let docNeedsUpdate = false;
       let imgUrl = data.imageUrl || "";
       let imgs = data.images || [];
+      let category = data.category || "Beaded Bracelets";
 
       if (imgUrl.includes("photo-1618403088890-3d9ff6f4c8da")) {
         imgUrl = "https://images.unsplash.com/photo-1611085583191-a3b1a3029a2a?q=80&w=800&auto=format&fit=crop";
@@ -229,10 +227,21 @@ export async function initializeDefaultDataIfNeeded() {
         return url;
       });
 
+      if (
+        category === "Seed Beads" ||
+        category === "Gemstone Beads" ||
+        category === "Pearl Beads" ||
+        category === "Bead Keyrings"
+      ) {
+        category = "Beaded Bracelets";
+        docNeedsUpdate = true;
+      }
+
       if (docNeedsUpdate) {
         repairBatch.update(docSnap.ref, {
           imageUrl: imgUrl,
-          images: repairedImgs
+          images: repairedImgs,
+          category: category
         });
         needsRepair = true;
       }

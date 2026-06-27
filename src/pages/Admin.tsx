@@ -17,7 +17,7 @@ interface AdminProps {
   onLogoutAdmin: () => void;
 }
 
-const CATEGORIES = ["Seed Beads", "Gemstone Beads", "Pearl Beads", "Couples/Friends", "Bead Keyrings"];
+const CATEGORIES = ["Beaded Bracelets", "Couples/Friends"];
 
 const HERO_PRESETS = [
   { name: "시그니처 비즈 에디토리얼", url: "https://images.unsplash.com/photo-1611085583191-a3b1a3029a2a?q=80&w=1600&auto=format&fit=crop" },
@@ -28,35 +28,20 @@ const HERO_PRESETS = [
 
 const PRODUCT_PRESETS = [
   {
-    category: "Seed Beads",
+    category: "Beaded Bracelets",
     images: [
       { name: "데이지 가든 비즈 팔찌", url: "https://images.unsplash.com/photo-1611085583191-a3b1a3029a2a?q=80&w=800&auto=format&fit=crop" },
-      { name: "소다 캔디 글라스 비즈 팔찌", url: "https://images.unsplash.com/photo-1603561591411-07134e71a2a9?q=80&w=800&auto=format&fit=crop" }
-    ]
-  },
-  {
-    category: "Gemstone Beads",
-    images: [
+      { name: "소다 캔디 글라스 비즈 팔찌", url: "https://images.unsplash.com/photo-1603561591411-07134e71a2a9?q=80&w=800&auto=format&fit=crop" },
       { name: "오라 피치 쿼츠 비즈 팔찌", url: "https://images.unsplash.com/photo-1602751584552-8ba73aad10e1?q=80&w=800&auto=format&fit=crop" },
-      { name: "라벤더 자수정 비즈 팔찌", url: "https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?q=80&w=800&auto=format&fit=crop" }
-    ]
-  },
-  {
-    category: "Pearl Beads",
-    images: [
-      { name: "쁘띠 담수진주 비즈 팔찌", url: "https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?q=80&w=800&auto=format&fit=crop" }
+      { name: "라벤더 자수정 비즈 팔찌", url: "https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?q=80&w=800&auto=format&fit=crop" },
+      { name: "쁘띠 담수진주 비즈 팔찌", url: "https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?q=80&w=800&auto=format&fit=crop" },
+      { name: "어텀 빈티지 비즈 키링", url: "https://images.unsplash.com/photo-1582139329536-e7284fece509?q=80&w=800&auto=format&fit=crop" }
     ]
   },
   {
     category: "Couples/Friends",
     images: [
       { name: "라벤더 레이어드 우정세트", url: "https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?q=80&w=800&auto=format&fit=crop" }
-    ]
-  },
-  {
-    category: "Bead Keyrings",
-    images: [
-      { name: "어텀 빈티지 비즈 키링", url: "https://images.unsplash.com/photo-1582139329536-e7284fece509?q=80&w=800&auto=format&fit=crop" }
     ]
   }
 ];
@@ -148,7 +133,7 @@ export default function Admin({ isAdmin, onLoginAdmin, onLogoutAdmin }: AdminPro
   // New/Editing Product form states
   const [prodName, setProdName] = useState("");
   const [prodPrice, setProdPrice] = useState(0);
-  const [prodCategory, setProdCategory] = useState("Ring");
+  const [prodCategory, setProdCategory] = useState("Beaded Bracelets");
   const [prodMaterial, setProdMaterial] = useState("");
   const [prodSize, setProdSize] = useState("");
   const [prodColor, setProdColor] = useState("");
@@ -226,7 +211,7 @@ export default function Admin({ isAdmin, onLoginAdmin, onLogoutAdmin }: AdminPro
     setEditingProduct(null);
     setProdName("");
     setProdPrice(0);
-    setProdCategory("Ring");
+    setProdCategory("Beaded Bracelets");
     setProdMaterial("");
     setProdSize("");
     setProdColor("");
@@ -1009,11 +994,8 @@ export default function Admin({ isAdmin, onLoginAdmin, onLogoutAdmin }: AdminPro
                     >
                       {CATEGORIES.map((cat) => (
                         <option key={cat} value={cat}>
-                          {cat === "Seed Beads" ? "씨드 비즈 (Seed Beads)" :
-                           cat === "Gemstone Beads" ? "천연석 비즈 (Gemstone)" :
-                           cat === "Pearl Beads" ? "담수진주 비즈 (Pearl)" :
-                           cat === "Couples/Friends" ? "커플/우정 비즈 (Couples)" :
-                           cat === "Bead Keyrings" ? "비즈 키링 (Keyrings)" : cat}
+                          {cat === "Beaded Bracelets" ? "비즈 팔찌 (Beaded Bracelets)" :
+                           cat === "Couples/Friends" ? "커플/우정 팔찌 (Couples/Friends)" : cat}
                         </option>
                       ))}
                     </select>
