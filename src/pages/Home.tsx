@@ -11,11 +11,11 @@ import ImageEditOverlay from "../components/ImageEditOverlay";
 
 // Fallback images for category thumbnails
 const CATEGORY_THUMBS: { [key: string]: string } = {
-  Ring: "https://images.unsplash.com/photo-1605100804763-247f67b3557e?q=80&w=600&auto=format&fit=crop",
-  Necklace: "https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?q=80&w=600&auto=format&fit=crop",
-  Bracelet: "https://images.unsplash.com/photo-1611591437281-460bfbe1220a?q=80&w=600&auto=format&fit=crop",
-  Earrings: "https://images.unsplash.com/photo-1635767798638-3e25273a8236?q=80&w=600&auto=format&fit=crop",
-  Keyring: "https://images.unsplash.com/photo-1582139329536-e7284fece509?q=80&w=600&auto=format&fit=crop",
+  "Seed Beads": "https://images.unsplash.com/photo-1618403088890-3d9ff6f4c8da?q=80&w=600&auto=format&fit=crop",
+  "Gemstone Beads": "https://images.unsplash.com/photo-1602751584552-8ba73aad10e1?q=80&w=600&auto=format&fit=crop",
+  "Pearl Beads": "https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?q=80&w=600&auto=format&fit=crop",
+  "Couples/Friends": "https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?q=80&w=600&auto=format&fit=crop",
+  "Bead Keyrings": "https://images.unsplash.com/photo-1582139329536-e7284fece509?q=80&w=600&auto=format&fit=crop",
 };
 
 // Emotional Instagram feed templates to mimic the brand image aesthetics
@@ -73,9 +73,9 @@ export default function Home() {
   const newProducts = products.filter((p) => p.isNew && !p.isSoldOut).slice(0, 4);
   const bestProducts = products.filter((p) => p.isBest).slice(0, 4);
   
-  // Custom filter for gifts: Ring, Necklace or products matching typical gifting premium items
+  // Custom filter for gifts: Pearl Beads, Couples/Friends or products matching typical gifting premium items
   const giftProducts = products
-    .filter((p) => p.category === "Necklace" || p.name.includes("Heart") || p.name.includes("Couple"))
+    .filter((p) => p.category === "Pearl Beads" || p.category === "Couples/Friends" || p.name.includes("Heart") || p.name.includes("Couple"))
     .slice(0, 4);
 
   const heroImage = settings?.heroImageUrl || "https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?q=80&w=1600&auto=format&fit=crop";
@@ -206,10 +206,18 @@ export default function Home() {
                   className="absolute inset-0 flex flex-col items-center justify-center text-white"
                 >
                   <span className="font-serif text-lg sm:text-xl font-medium tracking-widest mb-1 shadow-xs">
-                    {cat}
+                    {cat === "Seed Beads" ? "Seed Beads" :
+                     cat === "Gemstone Beads" ? "Gemstone" :
+                     cat === "Pearl Beads" ? "Pearl Beads" :
+                     cat === "Couples/Friends" ? "Couples" :
+                     cat === "Bead Keyrings" ? "Keyrings" : cat}
                   </span>
-                  <span className="text-[9px] font-mono tracking-widest opacity-80 uppercase bg-black/20 border border-white/20.5 rounded-full px-2 py-0.5 mt-1 sm:mt-1.5">
-                    View list
+                  <span className="text-[10px] font-sans tracking-widest opacity-95 uppercase font-semibold mt-1 bg-[#FAF9F6] text-stone-900 rounded-full px-3 py-0.5 shadow-xs">
+                    {cat === "Seed Beads" ? "씨드 비즈" :
+                     cat === "Gemstone Beads" ? "천연석 비즈" :
+                     cat === "Pearl Beads" ? "담수진주" :
+                     cat === "Couples/Friends" ? "우정/커플" :
+                     cat === "Bead Keyrings" ? "비즈 키링" : cat}
                   </span>
                 </Link>
               </motion.div>

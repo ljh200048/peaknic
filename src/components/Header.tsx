@@ -3,12 +3,10 @@ import { Link, useLocation } from "react-router-dom";
 import { Menu, X, Shield, User, LogOut, ShoppingBag } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
 import { useAuth } from "../context/AuthContext";
-import LoginModal from "./LoginModal";
 
 export default function Header() {
   const { isAdmin, currentUser, logout } = useAuth();
   const [isOpen, setIsOpen] = useState(false);
-  const [isLoginOpen, setIsLoginOpen] = useState(false);
   const location = useLocation();
 
   const navItems = [
@@ -58,7 +56,7 @@ export default function Header() {
               </span>
             </div>
             <span className="text-[9px] uppercase tracking-[0.54em] text-stone-400 mt-0.5">
-              emotional mood
+              beads craft studio
             </span>
           </Link>
         </div>
@@ -67,28 +65,39 @@ export default function Header() {
         <div className="flex items-center space-x-3">
           {/* User Sign status or Login trigger */}
           {currentUser ? (
-            <div className="hidden sm:flex items-center space-x-2 text-stone-700 bg-stone-100/70 border border-stone-200/60 rounded-full px-3 py-1 text-xs">
-              {currentUser.role === "admin" ? (
-                <Shield className="h-3 w-3 text-amber-600" />
-              ) : (
-                <User className="h-3 w-3 text-stone-500" />
-              )}
-              <span className="font-medium">{currentUser.name}님</span>
+            <div className="hidden sm:flex items-center space-x-2">
+              <Link
+                to="/mypage"
+                className={`flex items-center space-x-1.5 border rounded-full px-3.5 py-1 text-xs transition-all duration-200 ${
+                  isActive("/mypage")
+                    ? "bg-stone-900 border-stone-900 text-white"
+                    : "bg-stone-100/70 border-stone-200/60 text-stone-700 hover:border-stone-400"
+                }`}
+                id="header-user-badge"
+              >
+                {currentUser.role === "admin" ? (
+                  <Shield className="h-3 w-3 text-amber-600" />
+                ) : (
+                  <User className="h-3 w-3 text-stone-500" />
+                )}
+                <span className="font-medium">{currentUser.name}님 마이페이지</span>
+              </Link>
               <button
                 onClick={logout}
                 className="text-stone-400 hover:text-red-500 transition-colors pl-1"
                 title="로그아웃"
+                id="header-logout-btn"
               >
-                <LogOut className="h-3 w-3" />
+                <LogOut className="h-3.5 w-3.5" />
               </button>
             </div>
           ) : (
-            <button
-              onClick={() => setIsLoginOpen(true)}
+            <Link
+              to="/login"
               className="text-xs text-stone-600 hover:text-stone-900 font-medium px-2.5 py-1 transition-all"
             >
               로그인
-            </button>
+            </Link>
           )}
 
           {isAdmin && (
@@ -144,31 +153,38 @@ export default function Header() {
               {/* Login option on Mobile Drawer */}
               <div className="border-t border-stone-200 pt-4 mt-4 px-4 flex flex-col space-y-3">
                 {currentUser ? (
-                  <div className="flex items-center justify-between">
-                    <span className="text-xs font-medium text-stone-700 flex items-center">
-                      <User className="h-3.5 w-3.5 mr-1 text-stone-500" />
-                      {currentUser.name} 님 로그인 중
-                    </span>
-                    <button
-                      onClick={() => {
-                        logout();
-                        setIsOpen(false);
-                      }}
-                      className="text-xs text-red-500 underline flex items-center"
+                  <div className="space-y-3">
+                    <div className="flex items-center justify-between">
+                      <span className="text-xs font-medium text-stone-700 flex items-center">
+                        <User className="h-3.5 w-3.5 mr-1 text-stone-500" />
+                        {currentUser.name} 님 로그인 중
+                      </span>
+                      <button
+                        onClick={() => {
+                          logout();
+                          setIsOpen(false);
+                        }}
+                        className="text-xs text-red-500 underline flex items-center"
+                      >
+                        <span>로그아웃</span>
+                      </button>
+                    </div>
+                    <Link
+                      to="/mypage"
+                      onClick={() => setIsOpen(false)}
+                      className="w-full text-center rounded-lg border border-stone-300 py-2 text-xs font-semibold text-stone-700 bg-stone-50 block hover:bg-stone-100"
                     >
-                      <span>로그아웃</span>
-                    </button>
+                      마이페이지 가기
+                    </Link>
                   </div>
                 ) : (
-                  <button
-                    onClick={() => {
-                      setIsOpen(false);
-                      setIsLoginOpen(true);
-                    }}
-                    className="w-full text-center rounded-lg border border-stone-300 py-2.5 text-xs font-semibold text-stone-700 bg-white"
+                  <Link
+                    to="/login"
+                    onClick={() => setIsOpen(false)}
+                    className="w-full text-center rounded-lg border border-stone-300 py-2.5 text-xs font-semibold text-stone-700 bg-white block"
                   >
                     로그인 및 회원가입
-                  </button>
+                  </Link>
                 )}
 
                 {isAdmin && (
@@ -187,8 +203,6 @@ export default function Header() {
         )}
       </AnimatePresence>
 
-      {/* Global Login Modal Frame */}
-      <LoginModal isOpen={isLoginOpen} onClose={() => setIsLoginOpen(false)} />
     </header>
   );
 }

@@ -54,6 +54,23 @@
         "noticeText": { "type": "string" }
       },
       "required": ["heroTitle", "heroSubtitle", "heroImageUrl"]
+    },
+    "User": {
+      "title": "User",
+      "description": "User profile with personal details, shopping cart, wishlist and order tracking",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string" },
+        "role": { "type": "string" },
+        "name": { "type": "string" },
+        "email": { "type": "string" },
+        "profileImage": { "type": "string" },
+        "createdAt": { "type": "string" },
+        "orders": { "type": "array" },
+        "wishlist": { "type": "array" },
+        "cart": { "type": "array" }
+      },
+      "required": ["uid", "role", "name", "email", "createdAt"]
     }
   },
   "firestore": {
@@ -68,6 +85,10 @@
     "/siteSettings/{settingId}": {
       "schema": "SiteSettings",
       "description": "Store configuration block"
+    },
+    "/users/{userId}": {
+      "schema": "User",
+      "description": "User profile documents"
     }
   }
 }

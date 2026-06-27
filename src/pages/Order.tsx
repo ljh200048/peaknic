@@ -5,10 +5,12 @@ import { db } from "../firebase";
 import { Order } from "../types";
 import { ShoppingBag, CheckCircle, AlertCircle, FileText, User, MapPin, Notebook, CreditCard, ArrowRight } from "lucide-react";
 import { motion } from "motion/react";
+import { useAuth } from "../context/AuthContext";
 
 export default function OrderPage() {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
+  const { currentUser, updateProfile } = useAuth();
 
   // Load product options from query params
   const productId = searchParams.get("productId") || "";
@@ -29,9 +31,17 @@ export default function OrderPage() {
   const [errorMsg, setErrorMsg] = useState("");
   const [orderSuccess, setOrderSuccess] = useState<Order | null>(null);
 
+  // Auto-fill from logged-in user session
+  useEffect(() => {
+    if (currentUser) {
+      if (!customerName) setCustomerName(currentUser.name);
+      if (!depositorName) setDepositorName(currentUser.name);
+    }
+  }, [currentUser]);
+
   // Auto-fill depositor name with customer name for convenience
   useEffect(() => {
-    if (!depositorName) {
+    if (!depositorName && customerName) {
       setDepositorName(customerName);
     }
   }, [customerName]);
@@ -64,7 +74,7 @@ export default function OrderPage() {
 
     setSubmitting(true);
     try {
-      const orderData: Omit<Order, "id"> = {
+      const orderData: any = {
         productId,
         productName: productName + (selectedSize || selectedColor ? ` (${[selectedSize, selectedColor].filter(Boolean).join(" / ")})` : ""),
         price: productPrice,
@@ -75,6 +85,7 @@ export default function OrderPage() {
         memo: memo.trim(),
         status: "접수", // default starting status
         createdAt: new Date().toISOString(),
+        userId: currentUser?.uid || null
       };
 
       // Push to Firestore "orders" collection
@@ -88,6 +99,20 @@ export default function OrderPage() {
 
       // Update document on Firestore to keep ID synced inside the record (clean practice)
       await updateDoc(doc(db, "orders", docRef.id), { id: docRef.id });
+
+      // If logged in, update user's orders history and clear their cart if they ordered from cart!
+      if (currentUser) {
+        const currentOrders = currentUser.orders || [];
+        const updatedOrders = [...currentOrders, completeOrder];
+        
+        // Also remove from cart since the order has been placed
+        const updatedCart = (currentUser.cart || []).filter(item => item.productId !== productId);
+        
+        await updateProfile({ 
+          orders: updatedOrders,
+          cart: updatedCart
+        });
+      }
 
       setOrderSuccess(completeOrder);
     } catch (err) {

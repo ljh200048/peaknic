@@ -1,12 +1,15 @@
 import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { collection, getDocs, doc, setDoc, deleteDoc, updateDoc } from "firebase/firestore";
 import { db } from "../firebase";
 import { Product, Order, SiteSettings } from "../types";
 import { 
   ShieldAlert, ShieldCheck, Grid, Clock, Settings, Plus, Edit, Trash2, Save, 
-  X, Check, LogIn, RefreshCw, Layers, ExternalLink, Package, Filter, AlertCircle
+  X, Check, LogIn, RefreshCw, Layers, ExternalLink, Package, Filter, AlertCircle,
+  UserPlus, Shield, HelpCircle
 } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
+import { useAuth } from "../context/AuthContext";
 
 interface AdminProps {
   isAdmin: boolean;
@@ -14,15 +17,75 @@ interface AdminProps {
   onLogoutAdmin: () => void;
 }
 
-const CATEGORIES = ["Ring", "Necklace", "Bracelet", "Earrings", "Keyring"];
+const CATEGORIES = ["Seed Beads", "Gemstone Beads", "Pearl Beads", "Couples/Friends", "Bead Keyrings"];
+
+const HERO_PRESETS = [
+  { name: "시그니처 비즈 에디토리얼", url: "https://images.unsplash.com/photo-1618403088890-3d9ff6f4c8da?q=80&w=1600&auto=format&fit=crop" },
+  { name: "따뜻한 공방 감성", url: "https://images.unsplash.com/photo-1512436991641-6745cdb1723f?q=80&w=1600&auto=format&fit=crop" },
+  { name: "은은한 자연광 스튜디오", url: "https://images.unsplash.com/photo-1506806732259-39c2d0268443?q=80&w=1600&auto=format&fit=crop" },
+  { name: "미니멀 오브제 감성", url: "https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?q=80&w=1600&auto=format&fit=crop" }
+];
+
+const PRODUCT_PRESETS = [
+  {
+    category: "Seed Beads",
+    images: [
+      { name: "데이지 가든 비즈 팔찌", url: "https://images.unsplash.com/photo-1618403088890-3d9ff6f4c8da?q=80&w=800&auto=format&fit=crop" },
+      { name: "소다 캔디 글라스 비즈 팔찌", url: "https://images.unsplash.com/photo-1603561591411-07134e71a2a9?q=80&w=800&auto=format&fit=crop" }
+    ]
+  },
+  {
+    category: "Gemstone Beads",
+    images: [
+      { name: "오라 피치 쿼츠 비즈 팔찌", url: "https://images.unsplash.com/photo-1602751584552-8ba73aad10e1?q=80&w=800&auto=format&fit=crop" },
+      { name: "라벤더 자수정 비즈 팔찌", url: "https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?q=80&w=800&auto=format&fit=crop" }
+    ]
+  },
+  {
+    category: "Pearl Beads",
+    images: [
+      { name: "쁘띠 담수진주 비즈 팔찌", url: "https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?q=80&w=800&auto=format&fit=crop" }
+    ]
+  },
+  {
+    category: "Couples/Friends",
+    images: [
+      { name: "라벤더 레이어드 우정세트", url: "https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?q=80&w=800&auto=format&fit=crop" }
+    ]
+  },
+  {
+    category: "Bead Keyrings",
+    images: [
+      { name: "어텀 빈티지 비즈 키링", url: "https://images.unsplash.com/photo-1582139329536-e7284fece509?q=80&w=800&auto=format&fit=crop" }
+    ]
+  }
+];
 
 export default function Admin({ isAdmin, onLoginAdmin, onLogoutAdmin }: AdminProps) {
+  const navigate = useNavigate();
+  
+  // Auto-redirect to dedicated login page if not logged in
+  useEffect(() => {
+    if (!isAdmin) {
+      navigate("/login", { state: { from: { pathname: "/admin" } }, replace: true });
+    }
+  }, [isAdmin, navigate]);
+
   // Passcode gate state
   const [passcode, setPasscode] = useState("");
   const [errorMsg, setErrorMsg] = useState("");
 
+  const { registerAdmin } = useAuth();
+
   // Sub-tab selection state inside Dashboard
-  const [activeTab, setActiveTab] = useState<"products" | "orders" | "settings">("products");
+  const [activeTab, setActiveTab] = useState<"products" | "orders" | "settings" | "admins">("products");
+
+  // Admin account registration states
+  const [newAdminEmail, setNewAdminEmail] = useState("");
+  const [newAdminPassword, setNewAdminPassword] = useState("");
+  const [adminRegSuccess, setAdminRegSuccess] = useState("");
+  const [adminRegError, setAdminRegError] = useState("");
+  const [adminRegLoading, setAdminRegLoading] = useState(false);
 
   // Core Data models
   const [products, setProducts] = useState<Product[]>([]);
@@ -100,11 +163,11 @@ export default function Admin({ isAdmin, onLoginAdmin, onLogoutAdmin }: AdminPro
     e.preventDefault();
     setErrorMsg("");
     // Standard secure passcode comparison (as requested for quick evaluator login checks)
-    if (passcode.trim() === "peaknic123") {
+    if (passcode.trim() === "lch04141!!") {
       onLoginAdmin();
       setPasscode("");
     } else {
-      setErrorMsg("비밀번호(Passcode)가 일치하지 않습니다. 올바른 키를 입력해주세요. (Tip: peaknic123)");
+      setErrorMsg("비밀번호(Passcode)가 일치하지 않습니다. 올바른 키를 입력해주세요. (Tip: lch04141!!)");
     }
   };
 
@@ -239,58 +302,9 @@ export default function Admin({ isAdmin, onLoginAdmin, onLogoutAdmin }: AdminPro
   // Admin login screen component
   if (!isAdmin) {
     return (
-      <div className="min-h-[70vh] flex items-center justify-center px-4 py-12">
-        <motion.div
-          initial={{ opacity: 0, y: 15 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="bg-white border border-stone-250/70 rounded-2xl p-6 sm:p-8 shadow-lg text-stone-750"
-        >
-          <div className="text-center mb-6">
-            <div className="mx-auto rounded-full bg-stone-100 p-3.5 w-14 h-14 flex items-center justify-center mb-3 border">
-              <ShieldAlert className="h-6 w-6 text-amber-600" />
-            </div>
-            <h1 className="font-serif text-xl tracking-wide font-normal text-stone-900">
-              Peaknic Admin Access
-            </h1>
-            <p className="text-[11px] text-stone-400 font-medium tracking-wider uppercase mt-1">
-              restricted section for boutique administrators
-            </p>
-          </div>
-
-          {errorMsg && (
-            <div className="mb-4 rounded-xl bg-red-50 border border-red-200 p-3 text-[11px] text-red-800 leading-relaxed flex items-start">
-              <AlertCircle className="h-4 w-4 mr-1.5 shrink-0" />
-              <span>{errorMsg}</span>
-            </div>
-          )}
-
-          <form onSubmit={handleAdminLogin} className="space-y-4">
-            <div>
-              <label className="block text-[10px] font-bold tracking-widest text-stone-450 uppercase mb-1">
-                SECRET CREDENTIAL KEY (패스코드)
-              </label>
-              <input
-                type="password"
-                required
-                value={passcode}
-                onChange={(e) => setPasscode(e.target.value)}
-                placeholder="비밀번호 단차를 기재하세요"
-                className="w-full rounded-lg bg-stone-50 border border-stone-200 text-xs text-stone-850 p-3 focus:outline-none focus:border-stone-900"
-              />
-              <span className="text-[10px] text-stone-400 block mt-1 font-sans">
-                💡 편의상 평가를 조력하기 위해 설정된 마스터 패스코드는 <strong className="text-stone-700 font-bold">peaknic123</strong> 입니다.
-              </span>
-            </div>
-
-            <button
-              type="submit"
-              className="w-full flex items-center justify-center rounded-full bg-stone-950 text-white font-medium text-xs tracking-widest uppercase p-3 hover:bg-stone-800 duration-150 shadow-sm"
-            >
-              <LogIn className="h-3.5 w-3.5 mr-1.5" />
-              <span>LOG IN AS ADMINISTRATOR</span>
-            </button>
-          </form>
-        </motion.div>
+      <div className="min-h-[70vh] flex flex-col items-center justify-center text-stone-500 font-mono text-xs">
+        <div className="inline-block animate-spin h-5 w-5 border-2 border-stone-800 border-t-transparent rounded-full mb-3" id="admin-redirect-spinner" />
+        <p>관리자 세션으로 리다이렉트 중...</p>
       </div>
     );
   }
@@ -363,6 +377,19 @@ export default function Admin({ isAdmin, onLoginAdmin, onLogoutAdmin }: AdminPro
         >
           <Settings className="h-3.5 w-3.5" />
           <span>배너 및 아카이브 설정</span>
+        </button>
+
+        <button
+          onClick={() => setActiveTab("admins")}
+          className={`flex items-center space-x-1.5 pb-2.5 text-xs font-bold uppercase tracking-wider border-b-2 transition-all ${
+            activeTab === "admins"
+              ? "border-stone-900 text-stone-950 font-extrabold"
+              : "border-transparent text-stone-450 hover:text-stone-700"
+          }`}
+          id="tab-admin-accounts"
+        >
+          <UserPlus className="h-3.5 w-3.5" />
+          <span>관리자 계정 추가</span>
         </button>
       </div>
 
@@ -571,14 +598,60 @@ export default function Admin({ isAdmin, onLoginAdmin, onLogoutAdmin }: AdminPro
                     <label className="block text-[10px] font-bold tracking-widest text-stone-450 uppercase mb-1.5">
                       HERO BANNER COVER BACKGROUND URL (대표 배경 이미지 주소)
                     </label>
-                    <input
-                      type="url"
-                      required
-                      value={editHeroImageUrl}
-                      onChange={(e) => setEditHeroImageUrl(e.target.value)}
-                      placeholder="대표 배너 가로형 감성 주얼리 이미지 주소"
-                      className="w-full rounded-lg bg-stone-50 border border-stone-200 text-stone-850 p-3 focus:outline-none focus:border-stone-800 text-xs"
-                    />
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-3">
+                      <div className="md:col-span-2">
+                        <input
+                          type="url"
+                          required
+                          value={editHeroImageUrl}
+                          onChange={(e) => setEditHeroImageUrl(e.target.value)}
+                          placeholder="대표 배너 가로형 감성 주얼리 이미지 주소"
+                          className="w-full rounded-lg bg-stone-50 border border-stone-200 text-stone-850 p-3 focus:outline-none focus:border-stone-800 text-xs"
+                        />
+                      </div>
+                      <div className="relative aspect-video rounded-lg overflow-hidden border bg-stone-100 max-h-16">
+                        {editHeroImageUrl ? (
+                          <img
+                            src={editHeroImageUrl}
+                            alt="Hero Banner Preview"
+                            referrerPolicy="no-referrer"
+                            className="h-full w-full object-cover"
+                            onError={(e) => {
+                              (e.currentTarget as HTMLImageElement).src = "https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?q=80&w=400&auto=format&fit=crop";
+                            }}
+                          />
+                        ) : (
+                          <div className="h-full flex items-center justify-center text-[10px] text-stone-400">No Preview</div>
+                        )}
+                      </div>
+                    </div>
+
+                    {/* Hero image presets quick selection */}
+                    <div className="bg-stone-50/50 border border-stone-200/60 rounded-xl p-3">
+                      <span className="block text-[10px] font-bold tracking-widest text-stone-440 uppercase mb-2">대표 배경 이미지 추천 프리셋</span>
+                      <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+                        {HERO_PRESETS.map((preset) => (
+                          <button
+                            key={preset.name}
+                            type="button"
+                            onClick={() => setEditHeroImageUrl(preset.url)}
+                            className={`group relative aspect-[16/9] rounded-md overflow-hidden border-2 transition-all ${
+                              editHeroImageUrl === preset.url ? "border-amber-600 scale-[0.98]" : "border-stone-200 hover:border-stone-400"
+                            }`}
+                          >
+                            <img
+                              src={preset.url}
+                              alt={preset.name}
+                              referrerPolicy="no-referrer"
+                              className="h-full w-full object-cover"
+                            />
+                            <div className="absolute inset-0 bg-stone-900/40 flex items-end p-1">
+                              <span className="text-[8px] text-white font-medium truncate w-full text-left leading-tight">{preset.name}</span>
+                            </div>
+                          </button>
+                        ))}
+                      </div>
+                    </div>
                   </div>
 
                   <div>
@@ -615,6 +688,146 @@ export default function Admin({ isAdmin, onLoginAdmin, onLogoutAdmin }: AdminPro
                   >
                     <Save className="h-3.5 w-3.5 mr-1.5" />
                     <span>{savingSettings ? "저장 처리 중..." : "사이트 설정 갱신 저장하기"}</span>
+                  </button>
+                </form>
+              </div>
+            </div>
+          )}
+
+          {/* TAB 4: ADMIN ACCOUNTS MANAGER */}
+          {activeTab === "admins" && (
+            <div className="animate-fade">
+              <div className="bg-white border rounded-2xl p-6 sm:p-8 max-w-2xl shadow-xs">
+                <div className="flex items-center space-x-2.5 mb-2">
+                  <div className="p-2 rounded-xl bg-amber-50 border border-amber-100 text-amber-600">
+                    <Shield className="h-5 w-5" />
+                  </div>
+                  <div>
+                    <h3 className="font-serif text-lg text-stone-900 font-medium">관리자 계정 추가 등록</h3>
+                    <p className="text-[11px] text-stone-400 font-sans mt-0.5">
+                      안전한 세션 관리를 위하여 새로운 보조 관리자 이메일과 임시 비밀번호를 발급할 수 있습니다.
+                    </p>
+                  </div>
+                </div>
+
+                <div className="border-t border-stone-100 my-5"></div>
+
+                {adminRegSuccess && (
+                  <div className="mb-5 rounded-xl bg-emerald-50 border border-emerald-150 p-4 text-xs text-emerald-800 flex items-start space-x-2">
+                    <Check className="h-4 w-4 mt-0.5 shrink-0 text-emerald-600 stroke-[3]" />
+                    <div className="space-y-1">
+                      <p className="font-semibold">관리자 등록 성공</p>
+                      <p className="text-stone-600">{adminRegSuccess}</p>
+                    </div>
+                  </div>
+                )}
+
+                {adminRegError && (
+                  <div className="mb-5 rounded-xl bg-red-50 border border-red-150 p-4 text-xs text-red-800 flex items-start space-x-2">
+                    <AlertCircle className="h-4 w-4 mt-0.5 shrink-0 text-red-600" />
+                    <div className="space-y-1">
+                      <p className="font-semibold">계정 등록 오류</p>
+                      <p className="text-red-700">{adminRegError}</p>
+                    </div>
+                  </div>
+                )}
+
+                <form onSubmit={async (e) => {
+                  e.preventDefault();
+                  setAdminRegError("");
+                  setAdminRegSuccess("");
+                  setAdminRegLoading(true);
+
+                  if (!newAdminEmail.trim() || !newAdminPassword) {
+                    setAdminRegError("이메일과 비밀번호를 모두 입력해주십시오.");
+                    setAdminRegLoading(false);
+                    return;
+                  }
+
+                  if (newAdminPassword.length < 6) {
+                    setAdminRegError("비밀번호는 보안상 최소 6자 이상이어야 합니다.");
+                    setAdminRegLoading(false);
+                    return;
+                  }
+
+                  try {
+                    await registerAdmin(newAdminEmail.trim(), newAdminPassword);
+                    setAdminRegSuccess(`신규 관리자 [${newAdminEmail.trim()}] 계정이 생성되었습니다. 해당 관리자는 즉시 로그인할 수 있습니다.`);
+                    setNewAdminEmail("");
+                    setNewAdminPassword("");
+                  } catch (err: any) {
+                    console.error(err);
+                    let errMsg = "관리자 계정 등록에 실패하였습니다.";
+                    if (err.code === "auth/email-already-in-use") {
+                      errMsg = "이미 사용 중인 이메일 주소입니다.";
+                    } else if (err.code === "auth/invalid-email") {
+                      errMsg = "유효하지 않은 이메일 주소 형식입니다.";
+                    } else if (err.code === "auth/weak-password") {
+                      errMsg = "비밀번호는 최소 6자 이상이어야 합니다.";
+                    }
+                    setAdminRegError(errMsg);
+                  } finally {
+                    setAdminRegLoading(false);
+                  }
+                }} className="space-y-5 text-xs text-stone-700">
+                  <div>
+                    <label className="block text-[10px] font-bold tracking-widest text-stone-450 uppercase mb-1.5">
+                      NEW ADMIN EMAIL ADDRESS (새로운 관리자 이메일 주소)
+                    </label>
+                    <div className="relative">
+                      <span className="absolute left-3 top-3.5 text-stone-400">
+                        <LogIn className="h-4 w-4 text-stone-400" />
+                      </span>
+                      <input
+                        type="email"
+                        required
+                        value={newAdminEmail}
+                        onChange={(e) => setNewAdminEmail(e.target.value)}
+                        placeholder="assistant@peaknic.com"
+                        className="w-full rounded-lg bg-stone-50 border border-stone-200 text-stone-850 pl-9 pr-3 p-3 focus:outline-none focus:border-stone-800 text-xs animate-none"
+                        id="input-new-admin-email"
+                      />
+                    </div>
+                  </div>
+
+                  <div>
+                    <label className="block text-[10px] font-bold tracking-widest text-stone-450 uppercase mb-1.5">
+                      TEMPORARY PASSWORD (초기 부여할 임시 비밀번호)
+                    </label>
+                    <div className="relative">
+                      <span className="absolute left-3 top-3.5 text-stone-400">
+                        <Shield className="h-4 w-4 text-amber-600/75" />
+                      </span>
+                      <input
+                        type="password"
+                        required
+                        value={newAdminPassword}
+                        onChange={(e) => setNewAdminPassword(e.target.value)}
+                        placeholder="6자 이상의 영어/숫자 비밀번호 조합"
+                        className="w-full rounded-lg bg-stone-50 border border-stone-200 text-stone-850 pl-9 pr-3 p-3 focus:outline-none focus:border-stone-800 text-xs font-mono animate-none"
+                        id="input-new-admin-password"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="bg-stone-50 border border-stone-200/60 rounded-xl p-3.5 leading-relaxed space-y-1 text-[10px] text-stone-500">
+                    <p className="font-semibold text-stone-700 flex items-center mb-1">
+                      <HelpCircle className="h-3.5 w-3.5 mr-1 text-stone-400" />
+                      알려드립니다
+                    </p>
+                    <p>• 여기서 등록하는 새 관리자 이메일과 비밀번호는 Firebase Authentication 시스템에 직접 안전하게 저장됩니다.</p>
+                    <p>• 등록 직후, 새 관리자 정보로 '로그인 통합 세션'에서 곧바로 정상 작동합니다.</p>
+                    <p>• 이미 로그인되어 있는 본 관리자 세션은 로그아웃되지 않으므로 안심하셔도 좋습니다.</p>
+                  </div>
+
+                  <button
+                    type="submit"
+                    disabled={adminRegLoading}
+                    className="flex items-center justify-center rounded-full bg-stone-900 border border-stone-900 font-medium text-xs text-white tracking-widest uppercase px-6 py-3 hover:bg-stone-800 disabled:opacity-50 transition-all duration-200 shadow-sm cursor-pointer"
+                    id="btn-new-admin-register"
+                  >
+                    <UserPlus className="h-3.5 w-3.5 mr-1.5" />
+                    <span>{adminRegLoading ? "새 계정 생성 등록 중..." : "새로운 보조 관리자 생성 및 확정"}</span>
                   </button>
                 </form>
               </div>
@@ -680,7 +893,13 @@ export default function Admin({ isAdmin, onLoginAdmin, onLogoutAdmin }: AdminPro
                       className="w-full rounded-lg bg-stone-50 border border-stone-200 text-[#1C1917] p-2.5 focus:outline-none focus:border-stone-900 font-bold"
                     >
                       {CATEGORIES.map((cat) => (
-                        <option key={cat} value={cat}>{cat}</option>
+                        <option key={cat} value={cat}>
+                          {cat === "Seed Beads" ? "씨드 비즈 (Seed Beads)" :
+                           cat === "Gemstone Beads" ? "천연석 비즈 (Gemstone)" :
+                           cat === "Pearl Beads" ? "담수진주 비즈 (Pearl)" :
+                           cat === "Couples/Friends" ? "커플/우정 비즈 (Couples)" :
+                           cat === "Bead Keyrings" ? "비즈 키링 (Keyrings)" : cat}
+                        </option>
                       ))}
                     </select>
                   </div>
@@ -722,15 +941,70 @@ export default function Admin({ isAdmin, onLoginAdmin, onLogoutAdmin }: AdminPro
                 </div>
 
                 {/* Sub-image url */}
-                <div>
+                <div className="space-y-3">
                   <label className="block text-[10px] font-bold tracking-widest text-stone-450 mb-1">REPRESENTATIVE COVER IMAGE URL (제품 사진 링크)</label>
-                  <input
-                    type="url"
-                    value={prodImgUrl}
-                    onChange={(e) => setProdImgUrl(e.target.value)}
-                    placeholder="대표 사진 Unsplash 이미지 등의 URL 링크"
-                    className="w-full rounded-lg bg-stone-50 border border-stone-200 text-[#1C1917] p-2.5 focus:outline-none focus:border-stone-900"
-                  />
+                  
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                    <div className="sm:col-span-2">
+                      <input
+                        type="url"
+                        value={prodImgUrl}
+                        onChange={(e) => setProdImgUrl(e.target.value)}
+                        placeholder="대표 사진 Unsplash 이미지 등의 URL 링크"
+                        className="w-full rounded-lg bg-stone-50 border border-stone-200 text-[#1C1917] p-2.5 focus:outline-none focus:border-stone-900 text-xs"
+                      />
+                    </div>
+                    <div className="relative aspect-square rounded-lg overflow-hidden border bg-stone-100 max-h-20 sm:max-h-none">
+                      {prodImgUrl ? (
+                        <img
+                          src={prodImgUrl}
+                          alt="Product Preview"
+                          referrerPolicy="no-referrer"
+                          className="h-full w-full object-cover"
+                          onError={(e) => {
+                            (e.currentTarget as HTMLImageElement).src = "https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?q=80&w=400&auto=format&fit=crop";
+                          }}
+                        />
+                      ) : (
+                        <div className="h-full flex items-center justify-center text-[10px] text-stone-400">미리보기 없음</div>
+                      )}
+                    </div>
+                  </div>
+                  
+                  {/* Categorized Product Presets Selection */}
+                  <div className="bg-stone-50 border border-stone-200 p-3 rounded-lg">
+                    <span className="block text-[9px] font-bold tracking-widest text-stone-400 uppercase mb-2">액세서리 추천 감성 사진 (클릭 시 반영)</span>
+                    <div className="space-y-2.5 max-h-[160px] overflow-y-auto pr-1">
+                      {PRODUCT_PRESETS.map((group) => (
+                        <div key={group.category} className="space-y-1">
+                          <span className="text-[9px] font-bold text-stone-450">{group.category} 추천</span>
+                          <div className="grid grid-cols-3 gap-1.5">
+                            {group.images.map((img) => (
+                              <button
+                                key={img.name}
+                                type="button"
+                                onClick={() => setProdImgUrl(img.url)}
+                                className={`group relative aspect-square rounded overflow-hidden border-2 transition-all ${
+                                  prodImgUrl === img.url ? "border-amber-600 scale-[0.98]" : "border-stone-250 hover:border-stone-400"
+                                }`}
+                              >
+                                <img
+                                  src={img.url}
+                                  alt={img.name}
+                                  referrerPolicy="no-referrer"
+                                  className="h-full w-full object-cover"
+                                />
+                                <div className="absolute inset-x-0 bottom-0 bg-stone-900/60 p-0.5">
+                                  <span className="text-[7px] text-white block truncate leading-none text-center">{img.name}</span>
+                                </div>
+                              </button>
+                            ))}
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                  
                   <span className="text-[10px] text-stone-400 block mt-1">빈칸으로 남겨두시면 미려한 시그니처 쥬얼리 기본 프리셋 사진으로 대체됩니다.</span>
                 </div>
 

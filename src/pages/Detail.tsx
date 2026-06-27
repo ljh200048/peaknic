@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from "react";
-import { useParams, Link, useNavigate } from "react-router-dom";
+import { useParams, Link, useNavigate, useLocation } from "react-router-dom";
 import { doc, getDoc, collection, getDocs, limit, query, where } from "firebase/firestore";
 import { db } from "../firebase";
 import { Product } from "../types";
 import ProductCard from "../components/ProductCard";
-import { Truck, RotateCcw, AlertTriangle, ArrowLeft, ShoppingCart, MessageCircle, Ruler } from "lucide-react";
+import { Truck, RotateCcw, AlertTriangle, ArrowLeft, ShoppingCart, MessageCircle, Ruler, Heart, Check } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
 import { useAuth } from "../context/AuthContext";
 import ImageEditOverlay from "../components/ImageEditOverlay";
@@ -12,7 +12,8 @@ import ImageEditOverlay from "../components/ImageEditOverlay";
 export default function Detail() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
-  const { isAdmin } = useAuth();
+  const location = useLocation();
+  const { isAdmin, currentUser, addToWishlist, removeFromWishlist, addToCart } = useAuth();
   const [product, setProduct] = useState<Product | null>(null);
   const [recommendations, setRecommendations] = useState<Product[]>([]);
   const [selectedImage, setSelectedImage] = useState("");
@@ -21,6 +22,8 @@ export default function Detail() {
   // Selected Option States
   const [selectedSize, setSelectedSize] = useState("");
   const [selectedColor, setSelectedColor] = useState("");
+  const [isWished, setIsWished] = useState(false);
+  const [cartSuccess, setCartSuccess] = useState(false);
 
   useEffect(() => {
     async function fetchProductData() {
@@ -97,6 +100,40 @@ export default function Detail() {
 
   const sizes = product.size ? product.size.split(",").map((s) => s.trim()) : [];
   const colors = product.color ? product.color.split(",").map((c) => c.trim()) : [];
+
+  useEffect(() => {
+    if (currentUser && currentUser.wishlist && product) {
+      setIsWished(currentUser.wishlist.includes(product.id));
+    } else {
+      setIsWished(false);
+    }
+  }, [currentUser, product]);
+
+  const handleToggleWishlist = async () => {
+    if (!product) return;
+    if (!currentUser) {
+      navigate("/login", { state: { from: location } });
+      return;
+    }
+    if (isWished) {
+      await removeFromWishlist(product.id);
+      setIsWished(false);
+    } else {
+      await addToWishlist(product.id);
+      setIsWished(true);
+    }
+  };
+
+  const handleAddToCart = async () => {
+    if (!product) return;
+    if (!currentUser) {
+      navigate("/login", { state: { from: location } });
+      return;
+    }
+    await addToCart(product.id, 1, selectedSize || undefined, selectedColor || undefined);
+    setCartSuccess(true);
+    setTimeout(() => setCartSuccess(false), 2000);
+  };
 
   const handleOrderRedirect = () => {
     // Generate URL search parameters to pass selections dynamically to the order page
@@ -280,29 +317,76 @@ export default function Detail() {
           </div>
 
           {/* Order Actions portal */}
-          <div className="flex flex-col sm:flex-row space-y-3.5 sm:space-y-0 sm:space-x-4 pt-4">
-            <button
-              onClick={handleOrderRedirect}
-              disabled={product.isSoldOut}
-              className={`flex-1 flex items-center justify-center rounded-full font-medium text-sm px-8 py-4 shadow-sm transition-all duration-300 ${
-                product.isSoldOut
-                  ? "bg-stone-200 text-stone-400 cursor-not-allowed"
-                  : "bg-stone-900 text-white hover:bg-stone-800"
-              }`}
-            >
-              <ShoppingCart className="h-4 w-4 mr-2" />
-              <span>{product.isSoldOut ? "품절된 상품입니다" : "주문서 작성하기"}</span>
-            </button>
+          <div className="pt-6 border-t border-stone-100 space-y-4">
+            <div className="flex flex-wrap sm:flex-nowrap gap-3">
+              {/* Order Checkout Button */}
+              <button
+                onClick={handleOrderRedirect}
+                disabled={product.isSoldOut}
+                className={`flex-2 flex items-center justify-center rounded-full font-medium text-xs px-6 py-3.5 shadow-sm transition-all duration-300 ${
+                  product.isSoldOut
+                    ? "bg-stone-200 text-stone-400 cursor-not-allowed"
+                    : "bg-stone-900 text-white hover:bg-stone-800"
+                }`}
+                id="btn-detail-checkout"
+              >
+                <ShoppingCart className="h-4 w-4 mr-1.5" />
+                <span>{product.isSoldOut ? "품절된 상품" : "주문서 작성하기"}</span>
+              </button>
 
-            <a
-              href="https://instagram.com/peaknic_archive"
-              target="_blank"
-              rel="noreferrer"
-              className="inline-flex items-center justify-center rounded-full border border-stone-300/80 bg-white text-stone-700 px-6 py-4 text-xs font-semibold hover:border-stone-900 hover:text-stone-900 transition-colors"
-            >
-              <MessageCircle className="h-4 w-4 mr-1 text-stone-500" />
-              <span>인스타그램 문의</span>
-            </a>
+              {/* Add to Cart Button */}
+              <button
+                onClick={handleAddToCart}
+                disabled={product.isSoldOut}
+                className={`flex-1 flex items-center justify-center rounded-full font-medium text-xs px-6 py-3.5 border transition-all duration-300 ${
+                  product.isSoldOut
+                    ? "bg-transparent border-stone-200 text-stone-400 cursor-not-allowed"
+                    : cartSuccess
+                      ? "bg-emerald-50 border-emerald-500 text-emerald-800"
+                      : "bg-white border-stone-300 text-stone-800 hover:border-stone-900 hover:bg-stone-50"
+                }`}
+                id="btn-detail-add-to-cart"
+              >
+                {cartSuccess ? (
+                  <>
+                    <Check className="h-4 w-4 mr-1.5 text-emerald-600 animate-pulse" />
+                    <span>장바구니 추가됨</span>
+                  </>
+                ) : (
+                  <>
+                    <ShoppingCart className="h-4 w-4 mr-1.5 text-stone-550" />
+                    <span>장바구니 담기</span>
+                  </>
+                )}
+              </button>
+
+              {/* Toggle Wishlist Heart Button */}
+              <button
+                onClick={handleToggleWishlist}
+                className={`rounded-full p-3.5 border transition-all duration-300 flex items-center justify-center ${
+                  isWished 
+                    ? "bg-red-50 border-red-200 text-red-500 hover:bg-red-100/70" 
+                    : "bg-white border-stone-300 text-stone-450 hover:border-stone-900 hover:text-stone-900"
+                }`}
+                title={isWished ? "찜 해제" : "위시리스트 추가"}
+                id="btn-detail-wishlist"
+              >
+                <Heart className={`h-4 w-4 ${isWished ? "fill-current text-red-500" : ""}`} />
+              </button>
+            </div>
+
+            <div className="flex justify-end pt-1">
+              <a
+                href="https://instagram.com/peaknic_archive"
+                target="_blank"
+                rel="noreferrer"
+                className="inline-flex items-center text-xs font-semibold text-stone-600 hover:text-stone-900 hover:underline transition-all"
+                id="btn-detail-instagram-ask"
+              >
+                <MessageCircle className="h-3.5 w-3.5 mr-1 text-stone-450" />
+                <span>인스타그램으로 추가 제작 문의하기</span>
+              </a>
+            </div>
           </div>
 
           {/* Policy specifications (Delivery & Return guides) */}

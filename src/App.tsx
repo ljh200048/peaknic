@@ -15,6 +15,8 @@ import OrderPage from "./pages/Order";
 import Admin from "./pages/Admin";
 import About from "./pages/About";
 import Contact from "./pages/Contact";
+import Login from "./pages/Login";
+import MyPage from "./pages/MyPage";
 
 import { motion, AnimatePresence } from "motion/react";
 
@@ -40,12 +42,14 @@ function AnimatedRoutes() {
           <Route path="/contact" element={<Contact />} />
           <Route path="/product/:id" element={<Detail />} />
           <Route path="/order" element={<OrderPage />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/mypage" element={<MyPage />} />
           <Route 
             path="/admin" 
             element={
               <Admin 
                 isAdmin={isAdmin} 
-                onLoginAdmin={() => loginAdmin("peaknic123")} 
+                onLoginAdmin={() => loginAdmin("lch04141!!")} 
                 onLogoutAdmin={logout} 
               />
             } 

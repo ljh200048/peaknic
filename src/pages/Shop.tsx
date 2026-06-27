@@ -20,7 +20,7 @@ export default function Shop() {
   const onlyBest = searchParams.get("filter") === "best";
   const [searchQuery, setSearchQuery] = useState("");
 
-  const categories = ["All", "Ring", "Necklace", "Bracelet", "Earrings", "Keyring"];
+  const categories = ["All", "Seed Beads", "Gemstone Beads", "Pearl Beads", "Couples/Friends", "Bead Keyrings"];
 
   useEffect(() => {
     async function fetchProducts() {
@@ -116,7 +116,7 @@ export default function Shop() {
         <h1 className="font-serif text-3xl sm:text-4.5xl tracking-wide text-stone-900">The Catalog</h1>
         <div className="mx-auto h-[1px] w-12 bg-stone-900/60 mt-3.5 mb-2.5" />
         <p className="text-xs tracking-widest text-stone-400 uppercase mt-2.5">
-          Pure metallic strings and elements forged for you
+          Handcrafted premium bead collections woven for you
         </p>
       </div>
 
@@ -135,7 +135,12 @@ export default function Shop() {
                   : "bg-stone-100 hover:bg-stone-200/70 text-stone-650"
               }`}
             >
-              {cat === "All" ? "전체 상품" : cat}
+              {cat === "All" ? "전체 상품" : 
+               cat === "Seed Beads" ? "씨드 비즈" : 
+               cat === "Gemstone Beads" ? "천연석 비즈" : 
+               cat === "Pearl Beads" ? "담수진주 비즈" : 
+               cat === "Couples/Friends" ? "커플/우정 비즈" : 
+               cat === "Bead Keyrings" ? "비즈 키링" : cat}
             </button>
           ))}
         </div>

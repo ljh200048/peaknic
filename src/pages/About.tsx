@@ -31,14 +31,14 @@ export default function About() {
             01 / DESIGN MOTIF
           </span>
           <h2 className="font-serif text-2xl sm:text-3.5xl text-stone-900 tracking-wide font-light">
-            Everyday warmth captured in metal.
+            Everyday warmth hand-woven in beads.
           </h2>
           <p className="text-stone-600 text-sm leading-relaxed font-light text-justify">
             Peaknic(피크닉)이라는 매력적인 단어는 드넓은 풀밭 위에서 온전한 햇빛을 누리며 얻는 나긋나긋한 평온을 선물합니다. 
-            우리는 그 보석 같은 휴식과 고유한 향기를 간소화된 금속선과 단수 주얼리의 형태로 박제하여, 언제 어디서든 따뜻한 무드를 꺼내 입을 수 있도록 연구합니다.
+            우리는 그 보석 같은 휴식과 고유한 향기를 다채로운 천연석 비즈, 영롱한 무라노 글라스, 우아한 담수진주에 정성껏 엮어내어, 언제 어디서든 따뜻한 무드를 꺼내 입을 수 있도록 연구합니다.
           </p>
           <blockquote className="border-l-2 border-stone-850 pl-4 py-1 text-xs sm:text-sm text-stone-700 font-serif italic">
-            "가장 심플할 때 우리는 스스로의 선율을 보다 명확하고 깊게 들여다볼 수 있습니다."
+            "가장 단순하고 자연스러운 소재일 때 우리는 스스로의 선율을 보다 명확하고 깊게 들여다볼 수 있습니다."
           </blockquote>
         </div>
       </div>
@@ -47,17 +47,17 @@ export default function About() {
       <div className="grid grid-cols-1 md:grid-cols-3 gap-8 border-t border-stone-200/60 pt-16 mb-20 text-stone-700">
         <div className="space-y-3">
           <Compass className="h-6 w-6 text-stone-450" />
-          <h3 className="font-serif text-lg text-stone-900 font-medium">Minimal & Modern</h3>
+          <h3 className="font-serif text-lg text-stone-900 font-medium">Sensory Handcrafted</h3>
           <p className="text-xs font-light text-stone-550 leading-relaxed">
-            과분한 장식을 배제하고 금속 고유의 담백한 곡선과 흠잡을 데 없는 실루엣 만으로 승부합니다. 어떠한 룩에든 완벽하게 물들어 조력하는 액세서리입니다.
+            한 알 한 알 손끝으로 고른 프리미엄 비즈의 섬세한 배치와 편안하고 영롱한 조화 만을 생각합니다. 어떠한 데일리 룩에든 완벽하게 물들어 조력하는 수제 팔찌입니다.
           </p>
         </div>
 
         <div className="space-y-3">
           <Leaf className="h-6 w-6 text-stone-450" />
-          <h3 className="font-serif text-lg text-stone-900 font-medium">Daily Hygiene Standard</h3>
+          <h3 className="font-serif text-lg text-stone-900 font-medium">Nature-derived Quality</h3>
           <p className="text-xs font-light text-stone-550 leading-relaxed">
-            피부에 오랜 시간 밀착되는 주얼리 특성을 감안해 925 법정 순은, 써지컬 스틸 316L 등 무독성 알러지 방지 소재만을 고집하여 제작 기획을 운용합니다.
+            살결에 오랜 시간 닿는 팔찌의 특성을 고려해 최고급 TOHO 유리 비즈, 고탄성 프리미엄 우레탄사, 천연석 원석과 천연 담수진주만을 선별하여 정교하게 손 제작합니다.
           </p>
         </div>
 

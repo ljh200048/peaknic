@@ -3,7 +3,7 @@ import { getAuth } from "firebase/auth";
 import { getFirestore, collection, getDocs, doc, setDoc, writeBatch } from "firebase/firestore";
 import { Product, SiteSettings } from "./types";
 
-const firebaseConfig = {
+export const firebaseConfig = {
   apiKey: "AIzaSyBixc-qwtayr86ozUjVwnN_dGgTM4VIEdg",
   authDomain: "cheongchunfilm-mobile.firebaseapp.com",
   projectId: "cheongchunfilm-mobile",
@@ -22,7 +22,7 @@ const SAMPLE_PRODUCTS: Product[] = [
     id: "prod-1",
     name: "데이지 가든 비즈 팔찌 (Daisy Garden)",
     price: 11000,
-    category: "Bracelet",
+    category: "Seed Beads",
     material: "Premium TOHO Glass Seed Beads, Polyurethane Thread",
     size: "기본 둘레 약 15.5cm (신축성 우수)",
     color: "Daisy Yellow & Peach Multi",
@@ -39,9 +39,9 @@ const SAMPLE_PRODUCTS: Product[] = [
   },
   {
     id: "prod-2",
-    name: "오라 쿼츠 원석 비즈 팔찌 (Aura Quartz)",
+    name: "오라 쿼츠 천연석 비즈 팔찌 (Aura Quartz)",
     price: 19800,
-    category: "Bracelet",
+    category: "Gemstone Beads",
     material: "Natural Madagascan Rose Quartz, Aura Crystal, 925 Silver Accent",
     size: "기본 둘레 약 16cm (우레탄 줄)",
     color: "Milky Pink & Aurora-translucent",
@@ -60,7 +60,7 @@ const SAMPLE_PRODUCTS: Product[] = [
     id: "prod-3",
     name: "프렌치 쁘띠 담수진주 비즈 팔찌",
     price: 18500,
-    category: "Bracelet",
+    category: "Pearl Beads",
     material: "Natural Freshwater Pearl (담수진주 3mm), 14K Gold Filled Beads",
     size: "총 길이 15.5cm (+ 여유체인 3cm)",
     color: "Natural Creamy White & Gold",
@@ -79,7 +79,7 @@ const SAMPLE_PRODUCTS: Product[] = [
     id: "prod-4",
     name: "소다 캔디 글라스 비즈 팔찌 (Soda Candy)",
     price: 12000,
-    category: "Bracelet",
+    category: "Seed Beads",
     material: "Italian Murano Glass Beads, Matte Frost Seed Beads",
     size: "기본 둘레 약 16cm (고탄성 실리콘사)",
     color: "Soda Ocean Blue & Lime Green",
@@ -98,7 +98,7 @@ const SAMPLE_PRODUCTS: Product[] = [
     id: "prod-5",
     name: "어텀 바이브 비즈 팔찌 키링 Set",
     price: 14000,
-    category: "Keyring",
+    category: "Bead Keyrings",
     material: "Vintage Wood Beads, Acrylic Resin Beads, Brass Charm",
     size: "비즈 밴드 약 14cm (링포함 총 18cm)",
     color: "Warm Amber & Vintage Khaki",
@@ -117,7 +117,7 @@ const SAMPLE_PRODUCTS: Product[] = [
     id: "prod-6",
     name: "라벤더 자수정 레이어드 2줄 세트",
     price: 22000,
-    category: "Bracelet",
+    category: "Couples/Friends",
     material: "Amethyst (천연 자수정), Milky Chalcedony Gemstone, Cord",
     size: "자유 매듭 조절식 (Free)",
     color: "Soft Lavender & Milky Mist",
@@ -136,7 +136,7 @@ const SAMPLE_PRODUCTS: Product[] = [
 
 const DEFAULT_SETTINGS: SiteSettings = {
   id: "main",
-  heroTitle: "Elegant Handcrafted Beaded Bracelets",
+  heroTitle: "Handcrafted Beaded Bracelets",
   heroSubtitle: "Peaknic(피크닉)은 천연석 비즈, 맑은 무라노 글라스, 담수진주를 오가닉하게 엮어내어 일상 한구석에 편안하게 녹아드는 수제 비즈 팔찌를 직접 디자인합니다.",
   heroImageUrl: "https://images.unsplash.com/photo-1618403088890-3d9ff6f4c8da?q=80&w=1600&auto=format&fit=crop",
   instagramUrl: "https://instagram.com/peaknic_archive",
@@ -150,7 +150,13 @@ export async function initializeDefaultDataIfNeeded() {
     let isOldTheme = false;
     productsSnapshot.docs.forEach((doc) => {
       const data = doc.data();
-      if (data.category === "Ring" || data.category === "Necklace" || data.category === "Earrings") {
+      if (
+        data.category === "Ring" || 
+        data.category === "Necklace" || 
+        data.category === "Earrings" || 
+        data.category === "Bracelet" || 
+        data.category === "Keyring"
+      ) {
         isOldTheme = true;
       }
     });

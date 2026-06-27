@@ -14,7 +14,7 @@ export default function Footer() {
           <div className="md:col-span-1">
             <span className="font-serif text-xl tracking-[0.2em] text-stone-900 block mb-3">Peaknic</span>
             <p className="text-xs text-stone-500 leading-relaxed max-w-xs">
-              Everyday Accessories for Your Mood. 미니멀하고 데일리한 감성을 가득 담아, 매일의 분위기를 채우는 소장품을 선보입니다. 
+              Everyday Beaded Bracelets for Your Mood. 천연석 비즈, 맑은 무라노 글라스, 담수진주를 오가닉하게 엮어내어 일상에 편안하게 녹아드는 수제 비즈 팔찌 전문 몰입니다. 
             </p>
           </div>
 
@@ -22,11 +22,11 @@ export default function Footer() {
           <div>
             <h4 className="font-serif text-sm tracking-widest text-stone-900 uppercase mb-4">Categories</h4>
             <ul className="space-y-2.5 text-xs text-stone-500 font-medium">
-              <li><Link to="/shop?category=Ring" className="hover:text-stone-900 transition-colors">Ring (반지)</Link></li>
-              <li><Link to="/shop?category=Necklace" className="hover:text-stone-900 transition-colors">Necklace (목걸이)</Link></li>
-              <li><Link to="/shop?category=Bracelet" className="hover:text-stone-900 transition-colors">Bracelet (팔찌)</Link></li>
-              <li><Link to="/shop?category=Earrings" className="hover:text-stone-900 transition-colors">Earrings (귀걸이)</Link></li>
-              <li><Link to="/shop?category=Keyring" className="hover:text-stone-900 transition-colors">Keyring (키링)</Link></li>
+              <li><Link to="/shop?category=Seed Beads" className="hover:text-stone-900 transition-colors">Seed Beads (씨드 비즈)</Link></li>
+              <li><Link to="/shop?category=Gemstone Beads" className="hover:text-stone-900 transition-colors">Gemstone Beads (천연석 비즈)</Link></li>
+              <li><Link to="/shop?category=Pearl Beads" className="hover:text-stone-900 transition-colors">Pearl Beads (담수진주 비즈)</Link></li>
+              <li><Link to="/shop?category=Couples/Friends" className="hover:text-stone-900 transition-colors">Couples/Friends (커플/우정 비즈)</Link></li>
+              <li><Link to="/shop?category=Bead Keyrings" className="hover:text-stone-900 transition-colors">Bead Keyrings (비즈 키링)</Link></li>
             </ul>
           </div>
 
