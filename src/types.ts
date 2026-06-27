@@ -39,4 +39,10 @@ export interface SiteSettings {
   noticeText: string;
   storyImageUrl?: string;
   aboutImageUrl?: string;
+  archiveImageUrl1?: string;
+  archiveImageUrl2?: string;
+  archiveImageUrl3?: string;
+  archiveImageUrl4?: string;
+  archiveImageUrl5?: string;
+  archiveImageUrl6?: string;
 }

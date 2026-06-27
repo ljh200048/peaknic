@@ -53,7 +53,13 @@
         "instagramUrl": { "type": "string" },
         "noticeText": { "type": "string" },
         "storyImageUrl": { "type": "string" },
-        "aboutImageUrl": { "type": "string" }
+        "aboutImageUrl": { "type": "string" },
+        "archiveImageUrl1": { "type": "string" },
+        "archiveImageUrl2": { "type": "string" },
+        "archiveImageUrl3": { "type": "string" },
+        "archiveImageUrl4": { "type": "string" },
+        "archiveImageUrl5": { "type": "string" },
+        "archiveImageUrl6": { "type": "string" }
       },
       "required": ["heroTitle", "heroSubtitle", "heroImageUrl"]
     },

@@ -18,16 +18,6 @@ const CATEGORY_THUMBS: { [key: string]: string } = {
   "Bead Keyrings": "https://images.unsplash.com/photo-1582139329536-e7284fece509?q=80&w=600&auto=format&fit=crop",
 };
 
-// Emotional Instagram feed templates to mimic the brand image aesthetics
-const INSTA_POSTS = [
-  { id: 1, url: "https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?q=80&w=500&auto=format&fit=crop", likes: "142" },
-  { id: 2, url: "https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?q=80&w=500&auto=format&fit=crop", likes: "328" },
-  { id: 3, url: "https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?q=80&w=500&auto=format&fit=crop", likes: "511" },
-  { id: 4, url: "https://images.unsplash.com/photo-1603561591411-07134e71a2a9?q=80&w=500&auto=format&fit=crop", likes: "209" },
-  { id: 5, url: "https://images.unsplash.com/photo-1602751584552-8ba73aad10e1?q=80&w=500&auto=format&fit=crop", likes: "419" },
-  { id: 6, url: "https://images.unsplash.com/photo-1611591437281-460bfbe1220a?q=80&w=500&auto=format&fit=crop", likes: "313" },
-];
-
 export default function Home() {
   const { isAdmin } = useAuth();
   const [products, setProducts] = useState<Product[]>([]);
@@ -421,7 +411,14 @@ export default function Home() {
           </div>
 
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-3.5 sm:gap-4.5">
-            {INSTA_POSTS.map((post) => (
+            {[
+              { id: 1, fieldName: "archiveImageUrl1", url: settings?.archiveImageUrl1 || "https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?q=80&w=500&auto=format&fit=crop", likes: "142" },
+              { id: 2, fieldName: "archiveImageUrl2", url: settings?.archiveImageUrl2 || "https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?q=80&w=500&auto=format&fit=crop", likes: "328" },
+              { id: 3, fieldName: "archiveImageUrl3", url: settings?.archiveImageUrl3 || "https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?q=80&w=500&auto=format&fit=crop", likes: "511" },
+              { id: 4, fieldName: "archiveImageUrl4", url: settings?.archiveImageUrl4 || "https://images.unsplash.com/photo-1603561591411-07134e71a2a9?q=80&w=500&auto=format&fit=crop", likes: "209" },
+              { id: 5, fieldName: "archiveImageUrl5", url: settings?.archiveImageUrl5 || "https://images.unsplash.com/photo-1602751584552-8ba73aad10e1?q=80&w=500&auto=format&fit=crop", likes: "419" },
+              { id: 6, fieldName: "archiveImageUrl6", url: settings?.archiveImageUrl6 || "https://images.unsplash.com/photo-1611591437281-460bfbe1220a?q=80&w=500&auto=format&fit=crop", likes: "313" },
+            ].map((post) => (
               <div
                 key={post.id}
                 className="relative group rounded-xl overflow-hidden aspect-square shadow-xs bg-stone-100"
@@ -433,12 +430,29 @@ export default function Home() {
                   className="h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
                 />
                 {/* Micro hover overlay mimicking likes counts and instagram overlay details */}
-                <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center text-white text-xs font-semibold tracking-wide">
+                <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center text-white text-xs font-semibold tracking-wide pointer-events-none">
                   <div className="flex items-center space-x-1 uppercase">
                     <Heart className="h-4 w-4 text-rose-500 fill-rose-500 mr-1" />
                     <span>{post.likes}</span>
                   </div>
                 </div>
+
+                {/* Edit overlay on top */}
+                {isAdmin && (
+                  <ImageEditOverlay
+                    collectionName="siteSettings"
+                    docId="main"
+                    fieldName={post.fieldName}
+                    currentValue={post.url}
+                    onUpdateSuccess={(newUrl) => {
+                      setSettings((prev) =>
+                        prev ? { ...prev, [post.fieldName]: newUrl } : null
+                      );
+                    }}
+                    label="이미지 변경"
+                    className="absolute top-2 right-2 z-10"
+                  />
+                )}
               </div>
             ))}
           </div>

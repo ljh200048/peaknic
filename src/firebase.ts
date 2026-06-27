@@ -142,7 +142,13 @@ const DEFAULT_SETTINGS: SiteSettings = {
   instagramUrl: "https://instagram.com/peaknic_archive",
   noticeText: "• 한시적 무료 배송 프로모션 진행 중 (3만원 이상 구매 시)\n• 최고급 신축성 우레탄사 사용으로 알러지 걱정 없는 편안함\n• 100% 핸드메이드 방식으로 주문 제작 시 평균 2~4 영업일이 소요됩니다.",
   storyImageUrl: "https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?q=80&w=1000&auto=format&fit=crop",
-  aboutImageUrl: "https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?q=80&w=800&auto=format&fit=crop"
+  aboutImageUrl: "https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?q=80&w=800&auto=format&fit=crop",
+  archiveImageUrl1: "https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?q=80&w=500&auto=format&fit=crop",
+  archiveImageUrl2: "https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?q=80&w=500&auto=format&fit=crop",
+  archiveImageUrl3: "https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?q=80&w=500&auto=format&fit=crop",
+  archiveImageUrl4: "https://images.unsplash.com/photo-1603561591411-07134e71a2a9?q=80&w=500&auto=format&fit=crop",
+  archiveImageUrl5: "https://images.unsplash.com/photo-1602751584552-8ba73aad10e1?q=80&w=500&auto=format&fit=crop",
+  archiveImageUrl6: "https://images.unsplash.com/photo-1611591437281-460bfbe1220a?q=80&w=500&auto=format&fit=crop"
 };
 
 export async function initializeDefaultDataIfNeeded() {
@@ -250,6 +256,31 @@ export async function initializeDefaultDataIfNeeded() {
 
       if (!data.aboutImageUrl) {
         updates.aboutImageUrl = "https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?q=80&w=800&auto=format&fit=crop";
+        settingsNeedsUpdate = true;
+      }
+
+      if (!data.archiveImageUrl1) {
+        updates.archiveImageUrl1 = "https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?q=80&w=500&auto=format&fit=crop";
+        settingsNeedsUpdate = true;
+      }
+      if (!data.archiveImageUrl2) {
+        updates.archiveImageUrl2 = "https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?q=80&w=500&auto=format&fit=crop";
+        settingsNeedsUpdate = true;
+      }
+      if (!data.archiveImageUrl3) {
+        updates.archiveImageUrl3 = "https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?q=80&w=500&auto=format&fit=crop";
+        settingsNeedsUpdate = true;
+      }
+      if (!data.archiveImageUrl4) {
+        updates.archiveImageUrl4 = "https://images.unsplash.com/photo-1603561591411-07134e71a2a9?q=80&w=500&auto=format&fit=crop";
+        settingsNeedsUpdate = true;
+      }
+      if (!data.archiveImageUrl5) {
+        updates.archiveImageUrl5 = "https://images.unsplash.com/photo-1602751584552-8ba73aad10e1?q=80&w=500&auto=format&fit=crop";
+        settingsNeedsUpdate = true;
+      }
+      if (!data.archiveImageUrl6) {
+        updates.archiveImageUrl6 = "https://images.unsplash.com/photo-1611591437281-460bfbe1220a?q=80&w=500&auto=format&fit=crop";
         settingsNeedsUpdate = true;
       }
 
