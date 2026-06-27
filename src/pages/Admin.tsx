@@ -6,7 +6,7 @@ import { Product, Order, SiteSettings } from "../types";
 import { 
   ShieldAlert, ShieldCheck, Grid, Clock, Settings, Plus, Edit, Trash2, Save, 
   X, Check, LogIn, RefreshCw, Layers, ExternalLink, Package, Filter, AlertCircle,
-  UserPlus, Shield, HelpCircle
+  UserPlus, Shield, HelpCircle, Upload, Image as ImageIcon
 } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
 import { useAuth } from "../context/AuthContext";
@@ -60,6 +60,54 @@ const PRODUCT_PRESETS = [
     ]
   }
 ];
+
+// Utility function to compress and convert image file to Base64 (max 800x800, jpeg 0.75 quality)
+const compressAndConvertToBase64 = (file: File, maxWidth = 800, maxHeight = 800): Promise<string> => {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = (event) => {
+      const img = new Image();
+      img.src = event.target?.result as string;
+      img.onload = () => {
+        const canvas = document.createElement("canvas");
+        let width = img.width;
+        let height = img.height;
+
+        if (width > height) {
+          if (width > maxWidth) {
+            height = Math.round((height * maxWidth) / width);
+            width = maxWidth;
+          }
+        } else {
+          if (height > maxHeight) {
+            width = Math.round((width * maxHeight) / height);
+            height = maxHeight;
+          }
+        }
+
+        canvas.width = width;
+        canvas.height = height;
+
+        const ctx = canvas.getContext("2d");
+        if (!ctx) {
+          resolve(event.target?.result as string);
+          return;
+        }
+
+        ctx.drawImage(img, 0, 0, width, height);
+        const compressedBase64 = canvas.toDataURL("image/jpeg", 0.75);
+        resolve(compressedBase64);
+      };
+      img.onerror = (err) => {
+        reject(err);
+      };
+    };
+    reader.onerror = (err) => {
+      reject(err);
+    };
+  });
+};
 
 export default function Admin({ isAdmin, onLoginAdmin, onLogoutAdmin }: AdminProps) {
   const navigate = useNavigate();
@@ -118,6 +166,8 @@ export default function Admin({ isAdmin, onLoginAdmin, onLogoutAdmin }: AdminPro
   const [editNoticeText, setEditNoticeText] = useState("");
 
   const [savingSettings, setSavingSettings] = useState(false);
+  const [isUploadingProductImg, setIsUploadingProductImg] = useState(false);
+  const [isUploadingHeroImg, setIsUploadingHeroImg] = useState(false);
 
   useEffect(() => {
     if (isAdmin) {
@@ -203,6 +253,40 @@ export default function Admin({ isAdmin, onLoginAdmin, onLogoutAdmin }: AdminPro
     setProdIsBest(prod.isBest);
     setProdIsSoldOut(prod.isSoldOut);
     setIsProductModalOpen(true);
+  };
+
+  // Handle local product image file select/upload
+  const handleProductImgFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    
+    setIsUploadingProductImg(true);
+    try {
+      const base64 = await compressAndConvertToBase64(file);
+      setProdImgUrl(base64);
+    } catch (err) {
+      console.error("Error reading image file:", err);
+      alert("이미지 파일을 읽고 압축하는 중 문제가 발생했습니다.");
+    } finally {
+      setIsUploadingProductImg(false);
+    }
+  };
+
+  // Handle local settings/hero image file select/upload
+  const handleHeroImgFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    setIsUploadingHeroImg(true);
+    try {
+      const base64 = await compressAndConvertToBase64(file);
+      setEditHeroImageUrl(base64);
+    } catch (err) {
+      console.error("Error reading hero image file:", err);
+      alert("배너 이미지 파일을 읽고 압축하는 중 문제가 발생했습니다.");
+    } finally {
+      setIsUploadingHeroImg(false);
+    }
   };
 
   // Upload or change product specs inside Firestore products
@@ -599,7 +683,26 @@ export default function Admin({ isAdmin, onLoginAdmin, onLogoutAdmin }: AdminPro
                       HERO BANNER COVER BACKGROUND URL (대표 배경 이미지 주소)
                     </label>
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-3">
-                      <div className="md:col-span-2">
+                      <div 
+                        className="md:col-span-2 space-y-2"
+                        onDragOver={(e) => e.preventDefault()}
+                        onDrop={async (e) => {
+                          e.preventDefault();
+                          const file = e.dataTransfer.files?.[0];
+                          if (file && file.type.startsWith("image/")) {
+                            setIsUploadingHeroImg(true);
+                            try {
+                              const base64 = await compressAndConvertToBase64(file);
+                              setEditHeroImageUrl(base64);
+                            } catch (err) {
+                              console.error(err);
+                              alert("이미지 처리 중 실패하였습니다.");
+                            } finally {
+                              setIsUploadingHeroImg(false);
+                            }
+                          }
+                        }}
+                      >
                         <input
                           type="url"
                           required
@@ -608,8 +711,20 @@ export default function Admin({ isAdmin, onLoginAdmin, onLogoutAdmin }: AdminPro
                           placeholder="대표 배너 가로형 감성 주얼리 이미지 주소"
                           className="w-full rounded-lg bg-stone-50 border border-stone-200 text-stone-850 p-3 focus:outline-none focus:border-stone-800 text-xs"
                         />
+                        
+                        <label className="flex items-center justify-center space-x-2 rounded-lg border border-dashed border-stone-300 hover:border-stone-400 bg-white hover:bg-stone-50/50 px-4 py-2.5 text-xs font-semibold text-stone-700 cursor-pointer transition-colors shadow-2xs">
+                          <Upload className="h-3.5 w-3.5 text-stone-500" />
+                          <span>{isUploadingHeroImg ? "이미지 변환 중..." : "컴퓨터에서 사진 선택 (또는 끌어서 놓기)"}</span>
+                          <input
+                            type="file"
+                            accept="image/*"
+                            disabled={isUploadingHeroImg}
+                            onChange={handleHeroImgFileChange}
+                            className="hidden"
+                          />
+                        </label>
                       </div>
-                      <div className="relative aspect-video rounded-lg overflow-hidden border bg-stone-100 max-h-16">
+                      <div className="relative aspect-video rounded-lg overflow-hidden border bg-stone-100 max-h-20 md:max-h-none flex items-center justify-center">
                         {editHeroImageUrl ? (
                           <img
                             src={editHeroImageUrl}
@@ -945,7 +1060,26 @@ export default function Admin({ isAdmin, onLoginAdmin, onLogoutAdmin }: AdminPro
                   <label className="block text-[10px] font-bold tracking-widest text-stone-450 mb-1">REPRESENTATIVE COVER IMAGE URL (제품 사진 링크)</label>
                   
                   <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                    <div className="sm:col-span-2">
+                    <div 
+                      className="sm:col-span-2 space-y-2"
+                      onDragOver={(e) => e.preventDefault()}
+                      onDrop={async (e) => {
+                        e.preventDefault();
+                        const file = e.dataTransfer.files?.[0];
+                        if (file && file.type.startsWith("image/")) {
+                          setIsUploadingProductImg(true);
+                          try {
+                            const base64 = await compressAndConvertToBase64(file);
+                            setProdImgUrl(base64);
+                          } catch (err) {
+                            console.error(err);
+                            alert("이미지 처리 중 실패하였습니다.");
+                          } finally {
+                            setIsUploadingProductImg(false);
+                          }
+                        }
+                      }}
+                    >
                       <input
                         type="url"
                         value={prodImgUrl}
@@ -953,8 +1087,20 @@ export default function Admin({ isAdmin, onLoginAdmin, onLogoutAdmin }: AdminPro
                         placeholder="대표 사진 Unsplash 이미지 등의 URL 링크"
                         className="w-full rounded-lg bg-stone-50 border border-stone-200 text-[#1C1917] p-2.5 focus:outline-none focus:border-stone-900 text-xs"
                       />
+                      
+                      <label className="flex items-center justify-center space-x-2 rounded-lg border border-dashed border-stone-300 hover:border-stone-400 bg-white hover:bg-stone-50/50 px-4 py-2 text-xs font-semibold text-stone-700 cursor-pointer transition-colors shadow-2xs">
+                        <Upload className="h-3.5 w-3.5 text-stone-500" />
+                        <span>{isUploadingProductImg ? "이미지 변환 중..." : "컴퓨터에서 사진 선택 (또는 끌어서 놓기)"}</span>
+                        <input
+                          type="file"
+                          accept="image/*"
+                          disabled={isUploadingProductImg}
+                          onChange={handleProductImgFileChange}
+                          className="hidden"
+                        />
+                      </label>
                     </div>
-                    <div className="relative aspect-square rounded-lg overflow-hidden border bg-stone-100 max-h-20 sm:max-h-none">
+                    <div className="relative aspect-square rounded-lg overflow-hidden border bg-stone-100 max-h-24 sm:max-h-none flex items-center justify-center">
                       {prodImgUrl ? (
                         <img
                           src={prodImgUrl}
