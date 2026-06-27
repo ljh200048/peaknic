@@ -308,74 +308,16 @@ export default function Login() {
               )}
             </AnimatePresence>
 
-            {/* Quick Demo Accounts and Instructions */}
+            {/* Smart Instructions Box for Login Mode */}
             {activeTab === "login" && (
-              <div className="space-y-3" id="demo-guide-container">
-                {/* Demo Logins */}
-                <div className="bg-stone-50 border border-stone-200 rounded-xl p-3 text-stone-700">
-                  <div className="flex items-center space-x-1.5 font-bold text-[10px] text-stone-500 uppercase tracking-wider mb-2">
-                    <Shield className="h-3.5 w-3.5 text-stone-400 shrink-0" />
-                    <span>테스트용 데모 계정 간편 로그인</span>
-                  </div>
-                  <div className="grid grid-cols-2 gap-2">
-                    <button
-                      type="button"
-                      onClick={async () => {
-                        setEmail("member@peaknic.com");
-                        setPassword("password123");
-                        setErrorMsg("");
-                        setIsLoading(true);
-                        try {
-                          await loginUser("member@peaknic.com", "password123", "테스트회원");
-                          setSuccessMsg("데모 회원으로 안전하게 로그인되었습니다.");
-                          setTimeout(() => navigate(from), 1000);
-                        } catch (err: any) {
-                          setErrorMsg(err.message || "데모 로그인 중 오류가 발생했습니다.");
-                        } finally {
-                          setIsLoading(false);
-                        }
-                      }}
-                      className="flex items-center justify-center space-x-1 py-1.5 px-2.5 bg-white border border-stone-200 hover:bg-stone-100 hover:border-stone-300 rounded-lg text-[11px] font-medium transition-colors text-stone-800 cursor-pointer shadow-xs"
-                      id="btn-demo-member"
-                    >
-                      <User className="h-3 w-3 text-stone-500" />
-                      <span>일반회원 체험</span>
-                    </button>
-                    <button
-                      type="button"
-                      onClick={async () => {
-                        setEmail("admin@peaknic.com");
-                        setPassword("lch04141!!");
-                        setErrorMsg("");
-                        setIsLoading(true);
-                        try {
-                          await loginUser("admin@peaknic.com", "lch04141!!", "최고관리자");
-                          setSuccessMsg("관리자 권한으로 로그인되었습니다.");
-                          setTimeout(() => navigate("/admin"), 1000);
-                        } catch (err: any) {
-                          setErrorMsg(err.message || "데모 로그인 중 오류가 발생했습니다.");
-                        } finally {
-                          setIsLoading(false);
-                        }
-                      }}
-                      className="flex items-center justify-center space-x-1 py-1.5 px-2.5 bg-amber-50/50 border border-amber-200/80 hover:bg-amber-100/40 hover:border-amber-300 rounded-lg text-[11px] font-semibold transition-colors text-amber-900 cursor-pointer shadow-xs"
-                      id="btn-demo-admin"
-                    >
-                      <Shield className="h-3 w-3 text-amber-600" />
-                      <span>관리자 체험</span>
-                    </button>
-                  </div>
+              <div className="bg-stone-50 border border-stone-200/80 rounded-xl p-3.5 text-[10px] text-stone-500 leading-relaxed space-y-1">
+                <div className="flex items-center space-x-1.5 font-bold text-stone-700 uppercase tracking-wider mb-1">
+                  <HelpCircle className="h-3.5 w-3.5 text-stone-400 shrink-0" />
+                  <span>안내사항</span>
                 </div>
-
-                {/* Smart Instructions Box for Login Mode */}
-                <div className="bg-stone-50/50 border border-stone-200/60 rounded-xl p-3 text-[10px] text-stone-500 leading-relaxed space-y-1">
-                  <div className="flex items-center space-x-1.5 font-bold text-stone-700 uppercase tracking-wider mb-1">
-                    <HelpCircle className="h-3.5 w-3.5 text-stone-400 shrink-0" />
-                    <span>안내사항</span>
-                  </div>
-                  <p>• 직접 가입하신 이메일과 비밀번호를 사용하여 로그인할 수 있습니다.</p>
-                  <p>• 아직 가입하지 않은 이메일인 경우, 상단의 <span className="font-semibold text-stone-800 underline cursor-pointer" onClick={() => { setActiveTab("register"); setErrorMsg(""); }}>회원가입 탭</span>에서 회원 등록을 먼저 해주세요.</p>
-                </div>
+                <p>• 가입하신 이메일과 비밀번호를 사용하여 로그인할 수 있습니다.</p>
+                <p>• 계정이 없는 경우, <span className="font-semibold text-stone-800 underline cursor-pointer" onClick={() => setActiveTab("register")}>회원가입 탭</span>을 클릭하여 간편하게 가입하세요.</p>
+                <p>• 관리자 이메일과 자격 증명을 입력하면 관리자 대시보드로 진입합니다.</p>
               </div>
             )}
 
