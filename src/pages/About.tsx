@@ -1,7 +1,32 @@
+import { useState, useEffect } from "react";
 import { Leaf, Award, Compass, Heart } from "lucide-react";
 import { motion } from "motion/react";
+import { doc, getDoc } from "firebase/firestore";
+import { db } from "../firebase";
+import { useAuth } from "../context/AuthContext";
+import ImageEditOverlay from "../components/ImageEditOverlay";
 
 export default function About() {
+  const { isAdmin } = useAuth();
+  const [aboutImage, setAboutImage] = useState<string>("https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?q=80&w=800&auto=format&fit=crop");
+
+  useEffect(() => {
+    async function loadSettings() {
+      try {
+        const settingsDoc = await getDoc(doc(db, "siteSettings", "main"));
+        if (settingsDoc.exists()) {
+          const data = settingsDoc.data();
+          if (data.aboutImageUrl) {
+            setAboutImage(data.aboutImageUrl);
+          }
+        }
+      } catch (err) {
+        console.error("Error loading about page image:", err);
+      }
+    }
+    loadSettings();
+  }, []);
+
   return (
     <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-12 sm:py-20">
       
@@ -20,11 +45,23 @@ export default function About() {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-12 sm:gap-16 items-center mb-20">
         <div className="relative rounded-2xl overflow-hidden aspect-square border border-stone-100 bg-stone-150">
           <img
-            src="https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?q=80&w=800&auto=format&fit=crop"
+            src={aboutImage}
             alt="Silver ring close up craft"
             referrerPolicy="no-referrer"
             className="h-full w-full object-cover"
           />
+
+          {isAdmin && (
+            <ImageEditOverlay
+              collectionName="siteSettings"
+              docId="main"
+              fieldName="aboutImageUrl"
+              currentValue={aboutImage}
+              onUpdateSuccess={(newUrl) => setAboutImage(newUrl)}
+              label="스토리 이미지 변경"
+              className="absolute top-4 right-4"
+            />
+          )}
         </div>
         <div className="space-y-6 sm:space-y-8">
           <span className="text-xs font-mono tracking-widest text-stone-400 uppercase font-semibold">

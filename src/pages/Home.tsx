@@ -11,7 +11,7 @@ import ImageEditOverlay from "../components/ImageEditOverlay";
 
 // Fallback images for category thumbnails
 const CATEGORY_THUMBS: { [key: string]: string } = {
-  "Seed Beads": "https://images.unsplash.com/photo-1618403088890-3d9ff6f4c8da?q=80&w=600&auto=format&fit=crop",
+  "Seed Beads": "https://images.unsplash.com/photo-1611085583191-a3b1a3029a2a?q=80&w=600&auto=format&fit=crop",
   "Gemstone Beads": "https://images.unsplash.com/photo-1602751584552-8ba73aad10e1?q=80&w=600&auto=format&fit=crop",
   "Pearl Beads": "https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?q=80&w=600&auto=format&fit=crop",
   "Couples/Friends": "https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?q=80&w=600&auto=format&fit=crop",
@@ -49,7 +49,9 @@ export default function Home() {
             heroSubtitle: "Peaknic은 심플함 속에 녹아든 따뜻한 일상의 순간들을 아름다운 감성으로 포착합니다. 고요하게 빛나는 우리들만의 장식품.",
             heroImageUrl: "https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?q=80&w=1600&auto=format&fit=crop",
             instagramUrl: "https://instagram.com/peaknic_archive",
-            noticeText: "• 한시적 무료 배송 프로모션 진행 중 (3만원 이상 구매 시)"
+            noticeText: "• 한시적 무료 배송 프로모션 진행 중 (3만원 이상 구매 시)",
+            storyImageUrl: "https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?q=80&w=1000&auto=format&fit=crop",
+            aboutImageUrl: "https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?q=80&w=800&auto=format&fit=crop"
           });
         }
 
@@ -317,12 +319,28 @@ export default function Home() {
         <section className="my-16 grid grid-cols-1 md:grid-cols-2 gap-12 bg-stone-50 rounded-2xl overflow-hidden border border-stone-200/40 p-8 md:p-12 items-center">
           <div className="relative rounded-xl overflow-hidden aspect-4/3 bg-stone-150">
             <img
-              src="https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?q=80&w=1000&auto=format&fit=crop"
+              src={settings?.storyImageUrl || "https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?q=80&w=1000&auto=format&fit=crop"}
               alt="Peaknic Editorial Atmosphere"
               referrerPolicy="no-referrer"
               className="h-full w-full object-cover"
             />
             <div className="absolute inset-0 bg-stone-900/10" />
+
+            {isAdmin && (
+              <ImageEditOverlay
+                collectionName="siteSettings"
+                docId="main"
+                fieldName="storyImageUrl"
+                currentValue={settings?.storyImageUrl || "https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?q=80&w=1000&auto=format&fit=crop"}
+                onUpdateSuccess={(newUrl) => {
+                  setSettings((prev) =>
+                    prev ? { ...prev, storyImageUrl: newUrl } : null
+                  );
+                }}
+                label="스토리 이미지 변경"
+                className="absolute top-4 right-4"
+              />
+            )}
           </div>
           <div className="flex flex-col justify-center">
             <span className="text-xs font-bold text-stone-400 font-mono tracking-widest uppercase mb-2">Our Story</span>

@@ -27,9 +27,9 @@ const SAMPLE_PRODUCTS: Product[] = [
     size: "기본 둘레 약 15.5cm (신축성 우수)",
     color: "Daisy Yellow & Peach Multi",
     description: "자연스러운 무드의 데이지 꽃 패턴을 한 땀 한 땀 영롱하게 엮어낸 수공예 비즈 팔찌입니다. 잔잔한 파스텔 피치 톤과 데이지 옐로우의 조화가 매력적입니다.",
-    imageUrl: "https://images.unsplash.com/photo-1618403088890-3d9ff6f4c8da?q=80&w=600&auto=format&fit=crop",
+    imageUrl: "https://images.unsplash.com/photo-1611085583191-a3b1a3029a2a?q=80&w=600&auto=format&fit=crop",
     images: [
-      "https://images.unsplash.com/photo-1618403088890-3d9ff6f4c8da?q=80&w=600&auto=format&fit=crop"
+      "https://images.unsplash.com/photo-1611085583191-a3b1a3029a2a?q=80&w=600&auto=format&fit=crop"
     ],
     isNew: true,
     isBest: false,
@@ -138,28 +138,32 @@ const DEFAULT_SETTINGS: SiteSettings = {
   id: "main",
   heroTitle: "Handcrafted Beaded Bracelets",
   heroSubtitle: "Peaknic(피크닉)은 천연석 비즈, 맑은 무라노 글라스, 담수진주를 오가닉하게 엮어내어 일상 한구석에 편안하게 녹아드는 수제 비즈 팔찌를 직접 디자인합니다.",
-  heroImageUrl: "https://images.unsplash.com/photo-1618403088890-3d9ff6f4c8da?q=80&w=1600&auto=format&fit=crop",
+  heroImageUrl: "https://images.unsplash.com/photo-1611085583191-a3b1a3029a2a?q=80&w=1600&auto=format&fit=crop",
   instagramUrl: "https://instagram.com/peaknic_archive",
-  noticeText: "• 한시적 무료 배송 프로모션 진행 중 (3만원 이상 구매 시)\n• 최고급 신축성 우레탄사 사용으로 알러지 걱정 없는 편안함\n• 100% 핸드메이드 방식으로 주문 제작 시 평균 2~4 영업일이 소요됩니다."
+  noticeText: "• 한시적 무료 배송 프로모션 진행 중 (3만원 이상 구매 시)\n• 최고급 신축성 우레탄사 사용으로 알러지 걱정 없는 편안함\n• 100% 핸드메이드 방식으로 주문 제작 시 평균 2~4 영업일이 소요됩니다.",
+  storyImageUrl: "https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?q=80&w=1000&auto=format&fit=crop",
+  aboutImageUrl: "https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?q=80&w=800&auto=format&fit=crop"
 };
 
 export async function initializeDefaultDataIfNeeded() {
   try {
     const productsSnapshot = await getDocs(collection(db, "products"));
-    // Detect old accessory theme to perform instant overhaul wipe
-    let isOldTheme = false;
+    // We only perform an overhaul wipe if there are absolutely no new beaded products, to preserve custom edits
+    let hasNewBeadedProducts = false;
     productsSnapshot.docs.forEach((doc) => {
       const data = doc.data();
       if (
-        data.category === "Ring" || 
-        data.category === "Necklace" || 
-        data.category === "Earrings" || 
-        data.category === "Bracelet" || 
-        data.category === "Keyring"
+        data.category === "Seed Beads" ||
+        data.category === "Gemstone Beads" ||
+        data.category === "Pearl Beads" ||
+        data.category === "Couples/Friends" ||
+        data.category === "Bead Keyrings"
       ) {
-        isOldTheme = true;
+        hasNewBeadedProducts = true;
       }
     });
+
+    const isOldTheme = !productsSnapshot.empty && !hasNewBeadedProducts;
 
     if (productsSnapshot.empty || isOldTheme) {
       console.log("Empty or old jewelry database detected. Re-seeding Beaded Bracelet collection...");
@@ -184,7 +188,7 @@ export async function initializeDefaultDataIfNeeded() {
     let isOldSettings = false;
     settingsSnapshot.docs.forEach((doc) => {
       const data = doc.data();
-      if (data.heroTitle === "Everyday Accessories for Your Mood" || !data.heroTitle?.toLowerCase().includes("bead")) {
+      if (data.heroTitle === "Everyday Accessories for Your Mood") {
         isOldSettings = true;
       }
     });
@@ -193,6 +197,72 @@ export async function initializeDefaultDataIfNeeded() {
       console.log("Re-seeding brand identity to Beads Bracelet studio...");
       await setDoc(settingsDoc, DEFAULT_SETTINGS);
       console.log("Default settings initialized.");
+    }
+
+    // Self-healing check for broken Unsplash URLs in existing documents
+    const updatedProductsSnapshot = await getDocs(collection(db, "products"));
+    const repairBatch = writeBatch(db);
+    let needsRepair = false;
+
+    updatedProductsSnapshot.docs.forEach((docSnap) => {
+      const data = docSnap.data();
+      let docNeedsUpdate = false;
+      let imgUrl = data.imageUrl || "";
+      let imgs = data.images || [];
+
+      if (imgUrl.includes("photo-1618403088890-3d9ff6f4c8da")) {
+        imgUrl = "https://images.unsplash.com/photo-1611085583191-a3b1a3029a2a?q=80&w=800&auto=format&fit=crop";
+        docNeedsUpdate = true;
+      }
+
+      const repairedImgs = imgs.map((url: string) => {
+        if (url && url.includes("photo-1618403088890-3d9ff6f4c8da")) {
+          docNeedsUpdate = true;
+          return "https://images.unsplash.com/photo-1611085583191-a3b1a3029a2a?q=80&w=800&auto=format&fit=crop";
+        }
+        return url;
+      });
+
+      if (docNeedsUpdate) {
+        repairBatch.update(docSnap.ref, {
+          imageUrl: imgUrl,
+          images: repairedImgs
+        });
+        needsRepair = true;
+      }
+    });
+
+    const settingsDocSnap = await getDocs(collection(db, "siteSettings"));
+    settingsDocSnap.docs.forEach((docSnap) => {
+      const data = docSnap.data();
+      const updates: any = {};
+      let settingsNeedsUpdate = false;
+
+      if (data.heroImageUrl && data.heroImageUrl.includes("photo-1618403088890-3d9ff6f4c8da")) {
+        updates.heroImageUrl = "https://images.unsplash.com/photo-1611085583191-a3b1a3029a2a?q=80&w=1600&auto=format&fit=crop";
+        settingsNeedsUpdate = true;
+      }
+
+      if (!data.storyImageUrl) {
+        updates.storyImageUrl = "https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?q=80&w=1000&auto=format&fit=crop";
+        settingsNeedsUpdate = true;
+      }
+
+      if (!data.aboutImageUrl) {
+        updates.aboutImageUrl = "https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?q=80&w=800&auto=format&fit=crop";
+        settingsNeedsUpdate = true;
+      }
+
+      if (settingsNeedsUpdate) {
+        repairBatch.update(docSnap.ref, updates);
+        needsRepair = true;
+      }
+    });
+
+    if (needsRepair) {
+      console.log("Healing database: replacing broken Unsplash URLs...");
+      await repairBatch.commit();
+      console.log("Database repair complete.");
     }
   } catch (error) {
     console.warn("Could not seed initial data:", error);

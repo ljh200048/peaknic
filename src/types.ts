@@ -37,4 +37,6 @@ export interface SiteSettings {
   heroImageUrl: string;
   instagramUrl: string;
   noticeText: string;
+  storyImageUrl?: string;
+  aboutImageUrl?: string;
 }

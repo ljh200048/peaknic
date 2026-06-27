@@ -51,7 +51,9 @@
         "heroSubtitle": { "type": "string" },
         "heroImageUrl": { "type": "string" },
         "instagramUrl": { "type": "string" },
-        "noticeText": { "type": "string" }
+        "noticeText": { "type": "string" },
+        "storyImageUrl": { "type": "string" },
+        "aboutImageUrl": { "type": "string" }
       },
       "required": ["heroTitle", "heroSubtitle", "heroImageUrl"]
     },

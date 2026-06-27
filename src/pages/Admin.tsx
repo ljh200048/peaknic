@@ -20,7 +20,7 @@ interface AdminProps {
 const CATEGORIES = ["Seed Beads", "Gemstone Beads", "Pearl Beads", "Couples/Friends", "Bead Keyrings"];
 
 const HERO_PRESETS = [
-  { name: "시그니처 비즈 에디토리얼", url: "https://images.unsplash.com/photo-1618403088890-3d9ff6f4c8da?q=80&w=1600&auto=format&fit=crop" },
+  { name: "시그니처 비즈 에디토리얼", url: "https://images.unsplash.com/photo-1611085583191-a3b1a3029a2a?q=80&w=1600&auto=format&fit=crop" },
   { name: "따뜻한 공방 감성", url: "https://images.unsplash.com/photo-1512436991641-6745cdb1723f?q=80&w=1600&auto=format&fit=crop" },
   { name: "은은한 자연광 스튜디오", url: "https://images.unsplash.com/photo-1506806732259-39c2d0268443?q=80&w=1600&auto=format&fit=crop" },
   { name: "미니멀 오브제 감성", url: "https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?q=80&w=1600&auto=format&fit=crop" }
@@ -30,7 +30,7 @@ const PRODUCT_PRESETS = [
   {
     category: "Seed Beads",
     images: [
-      { name: "데이지 가든 비즈 팔찌", url: "https://images.unsplash.com/photo-1618403088890-3d9ff6f4c8da?q=80&w=800&auto=format&fit=crop" },
+      { name: "데이지 가든 비즈 팔찌", url: "https://images.unsplash.com/photo-1611085583191-a3b1a3029a2a?q=80&w=800&auto=format&fit=crop" },
       { name: "소다 캔디 글라스 비즈 팔찌", url: "https://images.unsplash.com/photo-1603561591411-07134e71a2a9?q=80&w=800&auto=format&fit=crop" }
     ]
   },
