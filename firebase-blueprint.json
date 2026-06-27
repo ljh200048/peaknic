@@ -59,7 +59,9 @@
         "archiveImageUrl3": { "type": "string" },
         "archiveImageUrl4": { "type": "string" },
         "archiveImageUrl5": { "type": "string" },
-        "archiveImageUrl6": { "type": "string" }
+        "archiveImageUrl6": { "type": "string" },
+        "categoryBeadedImageUrl": { "type": "string" },
+        "categoryCouplesImageUrl": { "type": "string" }
       },
       "required": ["heroTitle", "heroSubtitle", "heroImageUrl"]
     },

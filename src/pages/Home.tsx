@@ -9,12 +9,6 @@ import { motion } from "motion/react";
 import { useAuth } from "../context/AuthContext";
 import ImageEditOverlay from "../components/ImageEditOverlay";
 
-// Fallback images for category thumbnails
-const CATEGORY_THUMBS: { [key: string]: string } = {
-  "Beaded Bracelets": "https://images.unsplash.com/photo-1611085583191-a3b1a3029a2a?q=80&w=600&auto=format&fit=crop",
-  "Couples/Friends": "https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?q=80&w=600&auto=format&fit=crop",
-};
-
 export default function Home() {
   const { isAdmin } = useAuth();
   const [products, setProducts] = useState<Product[]>([]);
@@ -173,10 +167,25 @@ export default function Home() {
             </p>
           </div>
 
-          <div className="grid grid-cols-2 md:grid-cols-5 gap-4 sm:gap-6">
-            {Object.keys(CATEGORY_THUMBS).map((cat, idx) => (
+          <div className="grid grid-cols-2 max-w-3xl mx-auto gap-4 sm:gap-6">
+            {[
+              {
+                id: "Beaded Bracelets",
+                name: "Beaded",
+                krName: "비즈 팔찌",
+                imageUrl: settings?.categoryBeadedImageUrl || "https://images.unsplash.com/photo-1611085583191-a3b1a3029a2a?q=80&w=600&auto=format&fit=crop",
+                fieldName: "categoryBeadedImageUrl",
+              },
+              {
+                id: "Couples/Friends",
+                name: "Couples",
+                krName: "커플/우정 팔찌",
+                imageUrl: settings?.categoryCouplesImageUrl || "https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?q=80&w=600&auto=format&fit=crop",
+                fieldName: "categoryCouplesImageUrl",
+              }
+            ].map((catItem, idx) => (
               <motion.div
-                key={cat}
+                key={catItem.id}
                 initial={{ opacity: 0, y: 15 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
@@ -184,25 +193,40 @@ export default function Home() {
                 className="relative group rounded-xl overflow-hidden aspect-square border border-stone-100 bg-stone-100 shadow-xs"
               >
                 <img
-                  src={CATEGORY_THUMBS[cat]}
-                  alt={`${cat} category`}
+                  src={catItem.imageUrl}
+                  alt={`${catItem.name} category`}
                   referrerPolicy="no-referrer"
                   className="h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
                 />
                 <div className="absolute inset-0 bg-stone-950/25 transition-opacity group-hover:bg-stone-950/35 duration-300" />
                 <Link
-                  to={`/shop?category=${cat}`}
+                  to={`/shop?category=${catItem.id}`}
                   className="absolute inset-0 flex flex-col items-center justify-center text-white"
                 >
                   <span className="font-serif text-lg sm:text-xl font-medium tracking-widest mb-1 shadow-xs">
-                    {cat === "Beaded Bracelets" ? "Beaded" :
-                     cat === "Couples/Friends" ? "Couples" : cat}
+                    {catItem.name}
                   </span>
                   <span className="text-[10px] font-sans tracking-widest opacity-95 uppercase font-semibold mt-1 bg-[#FAF9F6] text-stone-900 rounded-full px-3 py-0.5 shadow-xs">
-                    {cat === "Beaded Bracelets" ? "비즈 팔찌" :
-                     cat === "Couples/Friends" ? "커플/우정 팔찌" : cat}
+                    {catItem.krName}
                   </span>
                 </Link>
+
+                {isAdmin && (
+                  <div className="absolute top-3 right-3 z-20">
+                    <ImageEditOverlay
+                      collectionName="siteSettings"
+                      docId="main"
+                      fieldName={catItem.fieldName}
+                      currentValue={catItem.imageUrl}
+                      onUpdateSuccess={(newUrl) => {
+                        setSettings((prev) =>
+                          prev ? { ...prev, [catItem.fieldName]: newUrl } : null
+                        );
+                      }}
+                      label={`${catItem.krName} 이미지 변경`}
+                    />
+                  </div>
+                )}
               </motion.div>
             ))}
           </div>

@@ -45,4 +45,6 @@ export interface SiteSettings {
   archiveImageUrl4?: string;
   archiveImageUrl5?: string;
   archiveImageUrl6?: string;
+  categoryBeadedImageUrl?: string;
+  categoryCouplesImageUrl?: string;
 }
