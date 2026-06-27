@@ -79,7 +79,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             // Create user document with default values if it doesn't exist yet
             const email = firebaseUser.email || "";
             const isSavedAdmin = localStorage.getItem("peaknic_admin_session") === "true";
-            const isEmailAdmin = email === "peaknic.official@gmail.com" || email === "admin@peaknic.com";
+            const isEmailAdmin = email === "peaknic.official@gmail.com" || email === "admin@peaknic.com" || email === "lch200048@gmail.com";
             const role: "member" | "admin" = (isSavedAdmin || isEmailAdmin) ? "admin" : "member";
             
             const defaultAvatars = [
@@ -159,7 +159,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       const userCredential = await createUserWithEmailAndPassword(auth, email, password);
       const user = userCredential.user;
       
-      const isEmailAdmin = email === "peaknic.official@gmail.com" || email === "admin@peaknic.com" || password === "lch04141!!";
+      const isEmailAdmin = email === "peaknic.official@gmail.com" || email === "admin@peaknic.com" || email === "lch200048@gmail.com" || password === "lch04141!!";
       const role: "member" | "admin" = isEmailAdmin ? "admin" : "member";
       
       const defaultAvatars = [
@@ -198,13 +198,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           let userData: UserSession;
           if (userDocSnap.exists()) {
             userData = userDocSnap.data() as UserSession;
-            const isEmailAdmin = email === "peaknic.official@gmail.com" || email === "admin@peaknic.com" || password === "lch04141!!";
+            const isEmailAdmin = email === "peaknic.official@gmail.com" || email === "admin@peaknic.com" || email === "lch200048@gmail.com" || password === "lch04141!!";
             if (isEmailAdmin && userData.role !== "admin") {
               userData.role = "admin";
               await updateDoc(userDocRef, { role: "admin" });
             }
           } else {
-            const isEmailAdmin = email === "peaknic.official@gmail.com" || email === "admin@peaknic.com" || password === "lch04141!!";
+            const isEmailAdmin = email === "peaknic.official@gmail.com" || email === "admin@peaknic.com" || email === "lch200048@gmail.com" || password === "lch04141!!";
             const role: "member" | "admin" = isEmailAdmin ? "admin" : "member";
             userData = {
               uid: user.uid,
@@ -246,13 +246,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       let userData: UserSession;
       if (userDocSnap.exists()) {
         userData = userDocSnap.data() as UserSession;
-        const isEmailAdmin = email === "peaknic.official@gmail.com" || email === "admin@peaknic.com" || password === "lch04141!!";
+        const isEmailAdmin = email === "peaknic.official@gmail.com" || email === "admin@peaknic.com" || email === "lch200048@gmail.com" || password === "lch04141!!";
         if (isEmailAdmin && userData.role !== "admin") {
           userData.role = "admin";
           await updateDoc(userDocRef, { role: "admin" });
         }
       } else {
-        const isEmailAdmin = email === "peaknic.official@gmail.com" || email === "admin@peaknic.com" || password === "lch04141!!";
+        const isEmailAdmin = email === "peaknic.official@gmail.com" || email === "admin@peaknic.com" || email === "lch200048@gmail.com" || password === "lch04141!!";
         const role: "member" | "admin" = isEmailAdmin ? "admin" : "member";
         userData = {
           uid: user.uid,
@@ -284,7 +284,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       const userCredential = await createUserWithEmailAndPassword(auth, email, password);
       const user = userCredential.user;
       
-      const isEmailAdmin = email === "peaknic.official@gmail.com" || email === "admin@peaknic.com" || password === "lch04141!!";
+      const isEmailAdmin = email === "peaknic.official@gmail.com" || email === "admin@peaknic.com" || email === "lch200048@gmail.com" || password === "lch04141!!";
       const role: "member" | "admin" = isEmailAdmin ? "admin" : "member";
       
       const defaultAvatars = [
@@ -322,7 +322,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         uid: "bypass-admin-uid",
         role: "admin",
         name: "관리자",
-        email: "admin@peaknic.com",
+        email: email || "lch200048@gmail.com",
         profileImage: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=200&auto=format&fit=crop",
         createdAt: new Date().toLocaleDateString("ko-KR", { year: "numeric", month: "long", day: "numeric" }),
         orders: [],
