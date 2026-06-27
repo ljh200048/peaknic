@@ -125,6 +125,34 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     return () => unsubscribe();
   }, []);
 
+  const translateAuthError = (err: any): Error => {
+    console.error("Firebase Auth Error:", err);
+    if (!err || !err.code) {
+      return new Error("인증 중 오류가 발생했습니다. 다시 시도해 주세요.");
+    }
+    
+    switch (err.code) {
+      case "auth/operation-not-allowed":
+        return new Error("Firebase 콘솔에서 '이메일/비밀번호(Email/Password)' 로그인 기능이 활성화되어 있지 않습니다. Firebase Console > Build > Authentication > Sign-in method에서 '이메일/비밀번호'를 사용 설정(Enabled)해 주셔야 로그인이 가능합니다.");
+      case "auth/email-already-in-use":
+        return new Error("이미 등록되어 사용 중인 이메일 주소입니다. 다른 이메일을 사용하거나 로그인해 주세요.");
+      case "auth/invalid-email":
+        return new Error("유효하지 않은 올바르지 않은 형식의 이메일 주소입니다.");
+      case "auth/weak-password":
+        return new Error("비밀번호는 최소 6자 이상으로 안전하게 입력해 주세요.");
+      case "auth/user-not-found":
+      case "auth/wrong-password":
+      case "auth/invalid-credential":
+        return new Error("이메일 주소 또는 비밀번호가 올바르지 않습니다. 다시 한 번 확인해 주세요.");
+      case "auth/network-request-failed":
+        return new Error("네트워크 연결에 실패했습니다. 네트워크 연결 상태를 확인한 후 다시 시도해 주세요.");
+      case "auth/too-many-requests":
+        return new Error("일시적으로 너무 많은 로그인 시도가 발생했습니다. 잠시 후 다시 시도해 주세요.");
+      default:
+        return new Error(err.message || "인증 처리 중 알 수 없는 오류가 발생했습니다.");
+    }
+  };
+
   const loginUser = async (email: string, password: string, name?: string): Promise<void> => {
     try {
       // 1. First, try to register the user
@@ -199,13 +227,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           }
           localStorage.setItem("peaknic_member_session", JSON.stringify(userData));
         } catch (signInErr: any) {
-          if (signInErr.code === "auth/wrong-password" || signInErr.code === "auth/invalid-credential") {
-            throw new Error("비밀번호가 올바르지 않습니다.");
-          }
-          throw signInErr;
+          throw translateAuthError(signInErr);
         }
       } else {
-        throw err;
+        throw translateAuthError(err);
       }
     }
   };
@@ -250,10 +275,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       }
       localStorage.setItem("peaknic_member_session", JSON.stringify(userData));
     } catch (err: any) {
-      if (err.code === "auth/wrong-password" || err.code === "auth/invalid-credential" || err.code === "auth/user-not-found" || err.code === "auth/invalid-email") {
-        throw new Error("이메일 또는 비밀번호가 올바르지 않습니다.");
-      }
-      throw err;
+      throw translateAuthError(err);
     }
   };
 
@@ -289,10 +311,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       }
       localStorage.setItem("peaknic_member_session", JSON.stringify(userData));
     } catch (err: any) {
-      if (err.code === "auth/email-already-in-use") {
-        throw new Error("이미 가입된 이메일 주소입니다.");
-      }
-      throw err;
+      throw translateAuthError(err);
     }
   };
 
