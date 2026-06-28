@@ -462,7 +462,7 @@ export default function Admin({ isAdmin, onLoginAdmin, onLogoutAdmin }: AdminPro
         heroTitle: editHeroTitle.trim(),
         heroSubtitle: editHeroSubtitle.trim(),
         heroImageUrl: editHeroImageUrl.trim(),
-        instagramUrl: editInstagramUrl.trim() || "https://instagram.com/peaknic_archive",
+        instagramUrl: editInstagramUrl.trim() || "https://www.instagram.com/peaknicworld?igsh=MWc0dnNuNGZyOGxyZw==",
         noticeText: editNoticeText.trim(),
         categoryBeadedImageUrl: editCategoryBeadedImageUrl.trim(),
         categoryCouplesImageUrl: editCategoryCouplesImageUrl.trim(),
@@ -1049,7 +1049,7 @@ export default function Admin({ isAdmin, onLoginAdmin, onLogoutAdmin }: AdminPro
                       required
                       value={editInstagramUrl}
                       onChange={(e) => setEditInstagramUrl(e.target.value)}
-                      placeholder="https://instagram.com/peaknic_archive"
+                      placeholder="https://www.instagram.com/peaknicworld?igsh=MWc0dnNuNGZyOGxyZw=="
                       className="w-full rounded-lg bg-stone-50 border border-stone-200 text-stone-850 p-3 focus:outline-none focus:border-stone-800 text-xs animate-fade"
                     />
                   </div>

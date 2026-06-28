@@ -75,7 +75,7 @@ export default function Home() {
             heroTitle: "Everyday Accessories for Your Mood",
             heroSubtitle: "Peaknic은 심플함 속에 녹아든 따뜻한 일상의 순간들을 아름다운 감성으로 포착합니다. 고요하게 빛나는 우리들만의 장식품.",
             heroImageUrl: "https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?q=80&w=1600&auto=format&fit=crop",
-            instagramUrl: "https://instagram.com/peaknic_archive",
+            instagramUrl: "https://www.instagram.com/peaknicworld?igsh=MWc0dnNuNGZyOGxyZw==",
             noticeText: "• 한시적 무료 배송 프로모션 진행 중 (3만원 이상 구매 시)",
             storyImageUrl: "/src/assets/images/regenerated_image_1782598633749.jpg",
             aboutImageUrl: "https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?q=80&w=800&auto=format&fit=crop"
@@ -140,7 +140,7 @@ export default function Home() {
                       heroTitle: "Everyday Accessories for Your Mood",
                       heroSubtitle: "Peaknic은 심플함 속에 녹아든 따뜻한 일상의 순간들을 아름다운 감성으로 포착합니다. 고요하게 빛나는 우리들만의 장식품.",
                       heroImageUrl: newUrl,
-                      instagramUrl: "https://instagram.com/peaknic_archive",
+                      instagramUrl: "https://www.instagram.com/peaknicworld?igsh=MWc0dnNuNGZyOGxyZw==",
                       noticeText: "• 한시적 무료 배송 프로모션 진행 중 (3만원 이상 구매 시)",
                     }
               );
@@ -462,12 +462,12 @@ export default function Home() {
             </h2>
             <div className="mx-auto h-[1px] w-12 bg-stone-900/60 mt-3.5 mb-2.5" />
             <a
-              href={settings?.instagramUrl || "https://instagram.com/peaknic_archive"}
+              href={settings?.instagramUrl || "https://www.instagram.com/peaknicworld?igsh=MWc0dnNuNGZyOGxyZw=="}
               target="_blank"
               rel="noreferrer"
               className="text-stone-550 hover:text-stone-900 text-xs font-mono tracking-widest uppercase hover:underline"
             >
-              @peaknic_archive
+              @peaknicworld
             </a>
           </div>
 

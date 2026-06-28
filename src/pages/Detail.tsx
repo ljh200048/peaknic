@@ -562,7 +562,7 @@ export default function Detail() {
             </div>
             
             <div className="flex justify-end">
-              <a href="https://instagram.com/peaknic_archive" target="_blank" rel="noreferrer" className="inline-flex items-center text-xs font-semibold text-stone-600 hover:text-stone-900 hover:underline">
+              <a href="https://www.instagram.com/peaknicworld?igsh=MWc0dnNuNGZyOGxyZw==" target="_blank" rel="noreferrer" className="inline-flex items-center text-xs font-semibold text-stone-600 hover:text-stone-900 hover:underline">
                 <MessageCircle className="h-3.5 w-3.5 mr-1 text-stone-450" />
                 <span>인스타그램으로 추가 제작 문의하기</span>
               </a>

@@ -139,7 +139,7 @@ const DEFAULT_SETTINGS: SiteSettings = {
   heroTitle: "Handcrafted Beaded Bracelets",
   heroSubtitle: "Peaknic(피크닉)은 천연석 비즈, 맑은 무라노 글라스, 담수진주를 오가닉하게 엮어내어 일상 한구석에 편안하게 녹아드는 수제 비즈 팔찌를 직접 디자인합니다.",
   heroImageUrl: "https://images.unsplash.com/photo-1611085583191-a3b1a3029a2a?q=80&w=1600&auto=format&fit=crop",
-  instagramUrl: "https://instagram.com/peaknic_archive",
+  instagramUrl: "https://www.instagram.com/peaknicworld?igsh=MWc0dnNuNGZyOGxyZw==",
   noticeText: "• 한시적 무료 배송 프로모션 진행 중 (3만원 이상 구매 시)\n• 최고급 신축성 우레탄사 사용으로 알러지 걱정 없는 편안함\n• 100% 핸드메이드 방식으로 주문 제작 시 평균 2~4 영업일이 소요됩니다.",
   storyImageUrl: "/src/assets/images/regenerated_image_1782598633749.jpg",
   aboutImageUrl: "https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?q=80&w=800&auto=format&fit=crop",

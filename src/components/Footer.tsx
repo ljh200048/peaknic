@@ -37,8 +37,8 @@ export default function Footer() {
               </li>
               <li className="flex items-start">
                 <Instagram className="h-3.5 w-3.5 mr-2 text-stone-400 mt-0.5" />
-                <a href="https://instagram.com/peaknic_archive" target="_blank" rel="noreferrer" className="underline hover:text-stone-900">
-                  @peaknic_archive
+                <a href="https://www.instagram.com/peaknicworld?igsh=MWc0dnNuNGZyOGxyZw==" target="_blank" rel="noreferrer" className="underline hover:text-stone-900">
+                  @peaknicworld
                 </a>
               </li>
               <li className="flex items-start">
