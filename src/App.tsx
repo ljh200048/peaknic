@@ -14,7 +14,7 @@ import Detail from "./pages/Detail";
 import OrderPage from "./pages/Order";
 import Admin from "./pages/Admin";
 import About from "./pages/About";
-import Contact from "./pages/Contact";
+import EventPage from "./pages/Event";
 import Login from "./pages/Login";
 import MyPage from "./pages/MyPage";
 
@@ -39,7 +39,7 @@ function AnimatedRoutes() {
           <Route path="/" element={<Home />} />
           <Route path="/shop" element={<Shop />} />
           <Route path="/about" element={<About />} />
-          <Route path="/contact" element={<Contact />} />
+          <Route path="/event" element={<EventPage />} />
           <Route path="/product/:id" element={<Detail />} />
           <Route path="/order" element={<OrderPage />} />
           <Route path="/login" element={<Login />} />
