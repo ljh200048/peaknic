@@ -149,10 +149,28 @@ export default function Admin({ isAdmin, onLoginAdmin, onLogoutAdmin }: AdminPro
   const [editHeroImageUrl, setEditHeroImageUrl] = useState("");
   const [editInstagramUrl, setEditInstagramUrl] = useState("");
   const [editNoticeText, setEditNoticeText] = useState("");
+  const [editCategoryBeadedImageUrl, setEditCategoryBeadedImageUrl] = useState("");
+  const [editCategoryCouplesImageUrl, setEditCategoryCouplesImageUrl] = useState("");
+  const [editStoryImageUrl, setEditStoryImageUrl] = useState("");
+  const [editArchiveImageUrl1, setEditArchiveImageUrl1] = useState("");
+  const [editArchiveImageUrl2, setEditArchiveImageUrl2] = useState("");
+  const [editArchiveImageUrl3, setEditArchiveImageUrl3] = useState("");
+  const [editArchiveImageUrl4, setEditArchiveImageUrl4] = useState("");
+  const [editArchiveImageUrl5, setEditArchiveImageUrl5] = useState("");
+  const [editArchiveImageUrl6, setEditArchiveImageUrl6] = useState("");
 
   const [savingSettings, setSavingSettings] = useState(false);
   const [isUploadingProductImg, setIsUploadingProductImg] = useState(false);
   const [isUploadingHeroImg, setIsUploadingHeroImg] = useState(false);
+  const [isUploadingBeadedImg, setIsUploadingBeadedImg] = useState(false);
+  const [isUploadingCouplesImg, setIsUploadingCouplesImg] = useState(false);
+  const [isUploadingStoryImg, setIsUploadingStoryImg] = useState(false);
+  const [isUploadingArchive1, setIsUploadingArchive1] = useState(false);
+  const [isUploadingArchive2, setIsUploadingArchive2] = useState(false);
+  const [isUploadingArchive3, setIsUploadingArchive3] = useState(false);
+  const [isUploadingArchive4, setIsUploadingArchive4] = useState(false);
+  const [isUploadingArchive5, setIsUploadingArchive5] = useState(false);
+  const [isUploadingArchive6, setIsUploadingArchive6] = useState(false);
 
   useEffect(() => {
     if (isAdmin) {
@@ -186,6 +204,15 @@ export default function Admin({ isAdmin, onLoginAdmin, onLogoutAdmin }: AdminPro
         setEditHeroImageUrl(rawSettings.heroImageUrl || "");
         setEditInstagramUrl(rawSettings.instagramUrl || "");
         setEditNoticeText(rawSettings.noticeText || "");
+        setEditCategoryBeadedImageUrl(rawSettings.categoryBeadedImageUrl || "");
+        setEditCategoryCouplesImageUrl(rawSettings.categoryCouplesImageUrl || "");
+        setEditStoryImageUrl(rawSettings.storyImageUrl || "");
+        setEditArchiveImageUrl1(rawSettings.archiveImageUrl1 || "");
+        setEditArchiveImageUrl2(rawSettings.archiveImageUrl2 || "");
+        setEditArchiveImageUrl3(rawSettings.archiveImageUrl3 || "");
+        setEditArchiveImageUrl4(rawSettings.archiveImageUrl4 || "");
+        setEditArchiveImageUrl5(rawSettings.archiveImageUrl5 || "");
+        setEditArchiveImageUrl6(rawSettings.archiveImageUrl6 || "");
       }
     } catch (err) {
       console.error("Error drawing administrator panels:", err);
@@ -274,6 +301,88 @@ export default function Admin({ isAdmin, onLoginAdmin, onLogoutAdmin }: AdminPro
     }
   };
 
+  // Handle local category image upload
+  const handleBeadedImgFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    setIsUploadingBeadedImg(true);
+    try {
+      const base64 = await compressAndConvertToBase64(file);
+      setEditCategoryBeadedImageUrl(base64);
+    } catch (err) {
+      console.error("Error reading beaded category image file:", err);
+      alert("비즈 카테고리 이미지 파일을 읽고 압축하는 중 문제가 발생했습니다.");
+    } finally {
+      setIsUploadingBeadedImg(false);
+    }
+  };
+
+  const handleCouplesImgFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    setIsUploadingCouplesImg(true);
+    try {
+      const base64 = await compressAndConvertToBase64(file);
+      setEditCategoryCouplesImageUrl(base64);
+    } catch (err) {
+      console.error("Error reading couples category image file:", err);
+      alert("커플 카테고리 이미지 파일을 읽고 압축하는 중 문제가 발생했습니다.");
+    } finally {
+      setIsUploadingCouplesImg(false);
+    }
+  };
+
+  const handleStoryImgFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    setIsUploadingStoryImg(true);
+    try {
+      const base64 = await compressAndConvertToBase64(file);
+      setEditStoryImageUrl(base64);
+    } catch (err) {
+      console.error("Error reading story image file:", err);
+      alert("스토리 이미지 파일을 읽고 압축하는 중 문제가 발생했습니다.");
+    } finally {
+      setIsUploadingStoryImg(false);
+    }
+  };
+
+  const handleArchiveImgFileChange = (index: number) => async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    const setters = [
+      setEditArchiveImageUrl1,
+      setEditArchiveImageUrl2,
+      setEditArchiveImageUrl3,
+      setEditArchiveImageUrl4,
+      setEditArchiveImageUrl5,
+      setEditArchiveImageUrl6,
+    ];
+    const uploaders = [
+      setIsUploadingArchive1,
+      setIsUploadingArchive2,
+      setIsUploadingArchive3,
+      setIsUploadingArchive4,
+      setIsUploadingArchive5,
+      setIsUploadingArchive6,
+    ];
+
+    uploaders[index](true);
+    try {
+      const base64 = await compressAndConvertToBase64(file);
+      setters[index](base64);
+    } catch (err) {
+      console.error(`Error reading archive image file ${index + 1}:`, err);
+      alert(`아카이브 이미지 파일 ${index + 1}을 읽고 압축하는 중 문제가 발생했습니다.`);
+    } finally {
+      uploaders[index](false);
+    }
+  };
+
   // Upload or change product specs inside Firestore products
   const handleSaveProduct = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -349,17 +458,26 @@ export default function Admin({ isAdmin, onLoginAdmin, onLogoutAdmin }: AdminPro
 
     setSavingSettings(true);
     try {
-      const updatedSettingsPayload: Omit<SiteSettings, "id"> = {
+      const updatedFields: Partial<SiteSettings> = {
         heroTitle: editHeroTitle.trim(),
         heroSubtitle: editHeroSubtitle.trim(),
         heroImageUrl: editHeroImageUrl.trim(),
         instagramUrl: editInstagramUrl.trim() || "https://instagram.com/peaknic_archive",
-        noticeText: editNoticeText.trim()
+        noticeText: editNoticeText.trim(),
+        categoryBeadedImageUrl: editCategoryBeadedImageUrl.trim(),
+        categoryCouplesImageUrl: editCategoryCouplesImageUrl.trim(),
+        storyImageUrl: editStoryImageUrl.trim(),
+        archiveImageUrl1: editArchiveImageUrl1.trim(),
+        archiveImageUrl2: editArchiveImageUrl2.trim(),
+        archiveImageUrl3: editArchiveImageUrl3.trim(),
+        archiveImageUrl4: editArchiveImageUrl4.trim(),
+        archiveImageUrl5: editArchiveImageUrl5.trim(),
+        archiveImageUrl6: editArchiveImageUrl6.trim()
       };
 
-      await setDoc(doc(db, "siteSettings", "main"), updatedSettingsPayload);
-      setSettings({ id: "main", ...updatedSettingsPayload });
-      alert("대표 홈 배너 정보와 아카이브 사이트 설정이 정상 수렴하여 반영되었습니다.");
+      await setDoc(doc(db, "siteSettings", "main"), updatedFields, { merge: true });
+      setSettings((prev) => prev ? { ...prev, ...updatedFields } : { id: "main", ...updatedFields } as SiteSettings);
+      alert("대표 홈 배너 정보와 카테고리 이미지 및 사이트 설정이 정상 반영되었습니다.");
     } catch (err) {
       console.error("Error rewriting site settings documents:", err);
       alert("설정 데이터 저장 중 실패했습니다.");
@@ -754,7 +872,175 @@ export default function Admin({ isAdmin, onLoginAdmin, onLogoutAdmin }: AdminPro
                     </div>
                   </div>
 
-                  <div>
+                  <div className="border-t border-stone-100 my-5 pt-5">
+                    <span className="block text-[10px] font-bold tracking-widest text-stone-500 uppercase mb-3">SENSORY CATEGORY THUMBNAILS (카테고리 대표 이미지)</span>
+                    
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                      {/* Beaded Bracelets */}
+                      <div className="space-y-2">
+                        <label className="block text-[9px] font-bold tracking-wider text-stone-450 uppercase">
+                          BEADED BRACELETS IMAGE (비즈 팔찌 카테고리)
+                        </label>
+                        <div className="relative aspect-square max-h-36 rounded-lg overflow-hidden border bg-stone-150 flex items-center justify-center mx-auto w-full">
+                          {editCategoryBeadedImageUrl ? (
+                            <img
+                              src={editCategoryBeadedImageUrl}
+                              alt="Beaded Category Preview"
+                              referrerPolicy="no-referrer"
+                              className="h-full w-full object-cover"
+                            />
+                          ) : (
+                            <div className="h-full flex items-center justify-center text-[10px] text-stone-400">No Preview</div>
+                          )}
+                        </div>
+                        <input
+                          type="url"
+                          required
+                          value={editCategoryBeadedImageUrl}
+                          onChange={(e) => setEditCategoryBeadedImageUrl(e.target.value)}
+                          placeholder="비즈 팔찌 카테고리 이미지 주소"
+                          className="w-full rounded-lg bg-stone-50 border border-stone-200 text-stone-850 p-2 focus:outline-none focus:border-stone-800 text-[11px]"
+                        />
+                        <label className="flex items-center justify-center space-x-1.5 rounded-lg border border-dashed border-stone-300 hover:border-stone-400 bg-white hover:bg-stone-50/50 px-3 py-1.5 text-[10px] font-semibold text-stone-700 cursor-pointer transition-colors shadow-2xs">
+                          <Upload className="h-3 w-3 text-stone-500" />
+                          <span>{isUploadingBeadedImg ? "변환 중..." : "컴퓨터 파일 업로드"}</span>
+                          <input
+                            type="file"
+                            accept="image/*"
+                            disabled={isUploadingBeadedImg}
+                            onChange={handleBeadedImgFileChange}
+                            className="hidden"
+                          />
+                        </label>
+                      </div>
+
+                      {/* Couples/Friends */}
+                      <div className="space-y-2">
+                        <label className="block text-[9px] font-bold tracking-wider text-stone-450 uppercase">
+                          COUPLES/FRIENDS IMAGE (커플/우정 팔찌 카테고리)
+                        </label>
+                        <div className="relative aspect-square max-h-36 rounded-lg overflow-hidden border bg-stone-150 flex items-center justify-center mx-auto w-full">
+                          {editCategoryCouplesImageUrl ? (
+                            <img
+                              src={editCategoryCouplesImageUrl}
+                              alt="Couples Category Preview"
+                              referrerPolicy="no-referrer"
+                              className="h-full w-full object-cover"
+                            />
+                          ) : (
+                            <div className="h-full flex items-center justify-center text-[10px] text-stone-400">No Preview</div>
+                          )}
+                        </div>
+                        <input
+                          type="url"
+                          required
+                          value={editCategoryCouplesImageUrl}
+                          onChange={(e) => setEditCategoryCouplesImageUrl(e.target.value)}
+                          placeholder="커플/우정 팔찌 카테고리 이미지 주소"
+                          className="w-full rounded-lg bg-stone-50 border border-stone-200 text-stone-850 p-2 focus:outline-none focus:border-stone-800 text-[11px]"
+                        />
+                        <label className="flex items-center justify-center space-x-1.5 rounded-lg border border-dashed border-stone-300 hover:border-stone-400 bg-white hover:bg-stone-50/50 px-3 py-1.5 text-[10px] font-semibold text-stone-700 cursor-pointer transition-colors shadow-2xs">
+                          <Upload className="h-3 w-3 text-stone-500" />
+                          <span>{isUploadingCouplesImg ? "변환 중..." : "컴퓨터 파일 업로드"}</span>
+                          <input
+                            type="file"
+                            accept="image/*"
+                            disabled={isUploadingCouplesImg}
+                            onChange={handleCouplesImgFileChange}
+                            className="hidden"
+                          />
+                        </label>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="border-t border-stone-100 my-5 pt-5">
+                    <span className="block text-[10px] font-bold tracking-widest text-stone-500 uppercase mb-3">EDITORIAL STORY BANNER (에디토리얼 스토리 이미지)</span>
+                    <div className="space-y-2">
+                      <div className="relative aspect-video max-h-48 rounded-lg overflow-hidden border bg-stone-150 flex items-center justify-center mx-auto w-full">
+                        {editStoryImageUrl ? (
+                          <img
+                            src={editStoryImageUrl}
+                            alt="Story Image Preview"
+                            referrerPolicy="no-referrer"
+                            className="h-full w-full object-cover"
+                          />
+                        ) : (
+                          <div className="h-full flex items-center justify-center text-[10px] text-stone-400">No Preview</div>
+                        )}
+                      </div>
+                      <input
+                        type="url"
+                        required
+                        value={editStoryImageUrl}
+                        onChange={(e) => setEditStoryImageUrl(e.target.value)}
+                        placeholder="스토리 에디토리얼 이미지 주소"
+                        className="w-full rounded-lg bg-stone-50 border border-stone-200 text-stone-850 p-2 focus:outline-none focus:border-stone-800 text-[11px]"
+                      />
+                      <label className="flex items-center justify-center space-x-1.5 rounded-lg border border-dashed border-stone-300 hover:border-stone-400 bg-white hover:bg-stone-50/50 px-3 py-1.5 text-[10px] font-semibold text-stone-700 cursor-pointer transition-colors shadow-2xs">
+                        <Upload className="h-3 w-3 text-stone-500" />
+                        <span>{isUploadingStoryImg ? "변환 중..." : "컴퓨터 파일 업로드"}</span>
+                        <input
+                          type="file"
+                          accept="image/*"
+                          disabled={isUploadingStoryImg}
+                          onChange={handleStoryImgFileChange}
+                          className="hidden"
+                        />
+                      </label>
+                    </div>
+                  </div>
+
+                  <div className="border-t border-stone-100 my-5 pt-5">
+                    <span className="block text-[10px] font-bold tracking-widest text-stone-500 uppercase mb-3">PEAKNIC ARCHIVE GALLERY (아카이브 하단 갤러리 이미지 6장)</span>
+                    <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
+                      {[
+                        { label: "1번 이미지", value: editArchiveImageUrl1, setter: setEditArchiveImageUrl1, uploading: isUploadingArchive1 },
+                        { label: "2번 이미지", value: editArchiveImageUrl2, setter: setEditArchiveImageUrl2, uploading: isUploadingArchive2 },
+                        { label: "3번 이미지", value: editArchiveImageUrl3, setter: setEditArchiveImageUrl3, uploading: isUploadingArchive3 },
+                        { label: "4번 이미지", value: editArchiveImageUrl4, setter: setEditArchiveImageUrl4, uploading: isUploadingArchive4 },
+                        { label: "5번 이미지", value: editArchiveImageUrl5, setter: setEditArchiveImageUrl5, uploading: isUploadingArchive5 },
+                        { label: "6번 이미지", value: editArchiveImageUrl6, setter: setEditArchiveImageUrl6, uploading: isUploadingArchive6 },
+                      ].map((item, idx) => (
+                        <div key={idx} className="space-y-2 border border-stone-100 p-2 rounded-lg bg-stone-50/40">
+                          <span className="block text-[9px] font-bold text-stone-450 uppercase">{item.label}</span>
+                          <div className="relative aspect-square rounded-md overflow-hidden border bg-stone-150 flex items-center justify-center w-full">
+                            {item.value ? (
+                              <img
+                                src={item.value}
+                                alt={`Archive ${idx + 1}`}
+                                referrerPolicy="no-referrer"
+                                className="h-full w-full object-cover"
+                              />
+                            ) : (
+                              <div className="text-[9px] text-stone-400">No Image</div>
+                            )}
+                          </div>
+                          <input
+                            type="url"
+                            required
+                            value={item.value}
+                            onChange={(e) => item.setter(e.target.value)}
+                            placeholder="이미지 URL"
+                            className="w-full rounded bg-white border border-stone-200 text-stone-850 p-1.5 focus:outline-none focus:border-stone-800 text-[10px]"
+                          />
+                          <label className="flex items-center justify-center space-x-1 rounded border border-dashed border-stone-200 hover:border-stone-300 bg-white hover:bg-stone-50/50 px-2 py-1 text-[9px] font-semibold text-stone-600 cursor-pointer transition-colors">
+                            <Upload className="h-2.5 w-2.5 text-stone-400" />
+                            <span>{item.uploading ? "업로드 중" : "파일 선택"}</span>
+                            <input
+                              type="file"
+                              accept="image/*"
+                              disabled={item.uploading}
+                              onChange={handleArchiveImgFileChange(idx)}
+                              className="hidden"
+                            />
+                          </label>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+                  <div className="border-t border-stone-100 my-5 pt-5">
                     <label className="block text-[10px] font-bold tracking-widest text-stone-450 uppercase mb-1.5">
                       INSTAGRAM DIGITAL CHANNEL FEED URL (인스타그램 주소)
                     </label>

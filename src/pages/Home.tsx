@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { collection, getDocs, doc, getDoc } from "firebase/firestore";
+import { collection, getDocs, doc, getDoc, updateDoc } from "firebase/firestore";
 import { db } from "../firebase";
 import { Product, SiteSettings } from "../types";
 import ProductCard from "../components/ProductCard";
@@ -19,9 +19,55 @@ export default function Home() {
     async function fetchData() {
       try {
         // Fetch Settings
-        const settingsDoc = await getDoc(doc(db, "siteSettings", "main"));
+        const settingsDocRef = doc(db, "siteSettings", "main");
+        const settingsDoc = await getDoc(settingsDocRef);
         if (settingsDoc.exists()) {
-          setSettings({ id: "main", ...settingsDoc.data() } as SiteSettings);
+          const data = settingsDoc.data();
+          const mappedData = { ...data } as any;
+          let needsUpdateInDb = false;
+
+          if (!data.storyImageUrl || data.storyImageUrl.includes("photo-1535632066927-ab7c9ab60908") || data.storyImageUrl.includes("regenerated_image_1782598321238.jpg")) {
+            mappedData.storyImageUrl = "/src/assets/images/regenerated_image_1782598633749.jpg";
+            needsUpdateInDb = true;
+          }
+          if (!data.archiveImageUrl1 || data.archiveImageUrl1.includes("photo-1515562141207-7a88fb7ce338")) {
+            mappedData.archiveImageUrl1 = "/src/assets/images/regenerated_image_1782598322380.jpg";
+            needsUpdateInDb = true;
+          }
+          if (!data.archiveImageUrl2 || data.archiveImageUrl2.includes("photo-1535632066927-ab7c9ab60908")) {
+            mappedData.archiveImageUrl2 = "/src/assets/images/regenerated_image_1782598323303.jpg";
+            needsUpdateInDb = true;
+          }
+          if (!data.archiveImageUrl3 || data.archiveImageUrl3.includes("photo-1599643478518-a784e5dc4c8f")) {
+            mappedData.archiveImageUrl3 = "/src/assets/images/regenerated_image_1782598324452.jpg";
+            needsUpdateInDb = true;
+          }
+          if (!data.archiveImageUrl4 || data.archiveImageUrl4.includes("photo-1603561591411-07134e71a2a9")) {
+            mappedData.archiveImageUrl4 = "/src/assets/images/regenerated_image_1782598325682.jpg";
+            needsUpdateInDb = true;
+          }
+          if (!data.archiveImageUrl5 || data.archiveImageUrl5.includes("photo-1602751584552-8ba73aad10e1")) {
+            mappedData.archiveImageUrl5 = "/src/assets/images/regenerated_image_1782598326794.jpg";
+            needsUpdateInDb = true;
+          }
+          if (!data.archiveImageUrl6 || data.archiveImageUrl6.includes("photo-1611591437281-460bfbe1220a")) {
+            mappedData.archiveImageUrl6 = "/src/assets/images/regenerated_image_1782598327726.jpg";
+            needsUpdateInDb = true;
+          }
+
+          if (needsUpdateInDb) {
+            updateDoc(settingsDocRef, {
+              storyImageUrl: mappedData.storyImageUrl,
+              archiveImageUrl1: mappedData.archiveImageUrl1,
+              archiveImageUrl2: mappedData.archiveImageUrl2,
+              archiveImageUrl3: mappedData.archiveImageUrl3,
+              archiveImageUrl4: mappedData.archiveImageUrl4,
+              archiveImageUrl5: mappedData.archiveImageUrl5,
+              archiveImageUrl6: mappedData.archiveImageUrl6,
+            }).catch(e => console.warn("Failed lazy update on settings:", e));
+          }
+
+          setSettings({ id: "main", ...mappedData } as SiteSettings);
         } else {
           // Fallback settings
           setSettings({
@@ -31,7 +77,7 @@ export default function Home() {
             heroImageUrl: "https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?q=80&w=1600&auto=format&fit=crop",
             instagramUrl: "https://instagram.com/peaknic_archive",
             noticeText: "• 한시적 무료 배송 프로모션 진행 중 (3만원 이상 구매 시)",
-            storyImageUrl: "https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?q=80&w=1000&auto=format&fit=crop",
+            storyImageUrl: "/src/assets/images/regenerated_image_1782598633749.jpg",
             aboutImageUrl: "https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?q=80&w=800&auto=format&fit=crop"
           });
         }
@@ -324,7 +370,7 @@ export default function Home() {
         <section className="my-16 grid grid-cols-1 md:grid-cols-2 gap-12 bg-stone-50 rounded-2xl overflow-hidden border border-stone-200/40 p-8 md:p-12 items-center">
           <div className="relative rounded-xl overflow-hidden aspect-4/3 bg-stone-150">
             <img
-              src={settings?.storyImageUrl || "https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?q=80&w=1000&auto=format&fit=crop"}
+              src={settings?.storyImageUrl || "/src/assets/images/regenerated_image_1782598633749.jpg"}
               alt="Peaknic Editorial Atmosphere"
               referrerPolicy="no-referrer"
               className="h-full w-full object-cover"
@@ -336,7 +382,7 @@ export default function Home() {
                 collectionName="siteSettings"
                 docId="main"
                 fieldName="storyImageUrl"
-                currentValue={settings?.storyImageUrl || "https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?q=80&w=1000&auto=format&fit=crop"}
+                currentValue={settings?.storyImageUrl || "/src/assets/images/regenerated_image_1782598633749.jpg"}
                 onUpdateSuccess={(newUrl) => {
                   setSettings((prev) =>
                     prev ? { ...prev, storyImageUrl: newUrl } : null
@@ -427,12 +473,12 @@ export default function Home() {
 
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-3.5 sm:gap-4.5">
             {[
-              { id: 1, fieldName: "archiveImageUrl1", url: settings?.archiveImageUrl1 || "https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?q=80&w=500&auto=format&fit=crop", likes: "142" },
-              { id: 2, fieldName: "archiveImageUrl2", url: settings?.archiveImageUrl2 || "https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?q=80&w=500&auto=format&fit=crop", likes: "328" },
-              { id: 3, fieldName: "archiveImageUrl3", url: settings?.archiveImageUrl3 || "https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?q=80&w=500&auto=format&fit=crop", likes: "511" },
-              { id: 4, fieldName: "archiveImageUrl4", url: settings?.archiveImageUrl4 || "https://images.unsplash.com/photo-1603561591411-07134e71a2a9?q=80&w=500&auto=format&fit=crop", likes: "209" },
-              { id: 5, fieldName: "archiveImageUrl5", url: settings?.archiveImageUrl5 || "https://images.unsplash.com/photo-1602751584552-8ba73aad10e1?q=80&w=500&auto=format&fit=crop", likes: "419" },
-              { id: 6, fieldName: "archiveImageUrl6", url: settings?.archiveImageUrl6 || "https://images.unsplash.com/photo-1611591437281-460bfbe1220a?q=80&w=500&auto=format&fit=crop", likes: "313" },
+              { id: 1, fieldName: "archiveImageUrl1", url: settings?.archiveImageUrl1 || "/src/assets/images/regenerated_image_1782598322380.jpg", likes: "142" },
+              { id: 2, fieldName: "archiveImageUrl2", url: settings?.archiveImageUrl2 || "/src/assets/images/regenerated_image_1782598323303.jpg", likes: "328" },
+              { id: 3, fieldName: "archiveImageUrl3", url: settings?.archiveImageUrl3 || "/src/assets/images/regenerated_image_1782598324452.jpg", likes: "511" },
+              { id: 4, fieldName: "archiveImageUrl4", url: settings?.archiveImageUrl4 || "/src/assets/images/regenerated_image_1782598325682.jpg", likes: "209" },
+              { id: 5, fieldName: "archiveImageUrl5", url: settings?.archiveImageUrl5 || "/src/assets/images/regenerated_image_1782598326794.jpg", likes: "419" },
+              { id: 6, fieldName: "archiveImageUrl6", url: settings?.archiveImageUrl6 || "/src/assets/images/regenerated_image_1782598327726.jpg", likes: "313" },
             ].map((post) => (
               <div
                 key={post.id}
