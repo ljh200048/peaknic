@@ -12,8 +12,12 @@ service cloud.firestore {
     }
 
     function isAdmin() {
-      return isSignedIn() && 
-             get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == "admin";
+      return isSignedIn() && (
+        request.auth.token.email == "peaknic.official@gmail.com" ||
+        request.auth.token.email == "admin@peaknic.com" ||
+        request.auth.token.email == "lch200048@gmail.com" ||
+        get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == "admin"
+      );
     }
 
     // Default-deny catch-all
